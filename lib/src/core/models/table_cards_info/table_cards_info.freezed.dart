@@ -18,7 +18,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TableCardsInfoModel {
   List<TableCardModel> get tableCards => throw _privateConstructorUsedError;
   List<VoteModel> get votes => throw _privateConstructorUsedError;
-  Id? get selectedCardId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TableCardsInfoModelCopyWith<TableCardsInfoModel> get copyWith =>
@@ -31,10 +30,7 @@ abstract class $TableCardsInfoModelCopyWith<$Res> {
           TableCardsInfoModel value, $Res Function(TableCardsInfoModel) then) =
       _$TableCardsInfoModelCopyWithImpl<$Res, TableCardsInfoModel>;
   @useResult
-  $Res call(
-      {List<TableCardModel> tableCards,
-      List<VoteModel> votes,
-      Id? selectedCardId});
+  $Res call({List<TableCardModel> tableCards, List<VoteModel> votes});
 }
 
 /// @nodoc
@@ -52,7 +48,6 @@ class _$TableCardsInfoModelCopyWithImpl<$Res, $Val extends TableCardsInfoModel>
   $Res call({
     Object? tableCards = null,
     Object? votes = null,
-    Object? selectedCardId = freezed,
   }) {
     return _then(_value.copyWith(
       tableCards: null == tableCards
@@ -63,10 +58,6 @@ class _$TableCardsInfoModelCopyWithImpl<$Res, $Val extends TableCardsInfoModel>
           ? _value.votes
           : votes // ignore: cast_nullable_to_non_nullable
               as List<VoteModel>,
-      selectedCardId: freezed == selectedCardId
-          ? _value.selectedCardId
-          : selectedCardId // ignore: cast_nullable_to_non_nullable
-              as Id?,
     ) as $Val);
   }
 }
@@ -79,10 +70,7 @@ abstract class _$$_TableCardsInfoModelCopyWith<$Res>
       __$$_TableCardsInfoModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {List<TableCardModel> tableCards,
-      List<VoteModel> votes,
-      Id? selectedCardId});
+  $Res call({List<TableCardModel> tableCards, List<VoteModel> votes});
 }
 
 /// @nodoc
@@ -98,7 +86,6 @@ class __$$_TableCardsInfoModelCopyWithImpl<$Res>
   $Res call({
     Object? tableCards = null,
     Object? votes = null,
-    Object? selectedCardId = freezed,
   }) {
     return _then(_$_TableCardsInfoModel(
       tableCards: null == tableCards
@@ -109,10 +96,6 @@ class __$$_TableCardsInfoModelCopyWithImpl<$Res>
           ? _value._votes
           : votes // ignore: cast_nullable_to_non_nullable
               as List<VoteModel>,
-      selectedCardId: freezed == selectedCardId
-          ? _value.selectedCardId
-          : selectedCardId // ignore: cast_nullable_to_non_nullable
-              as Id?,
     ));
   }
 }
@@ -122,8 +105,7 @@ class __$$_TableCardsInfoModelCopyWithImpl<$Res>
 class _$_TableCardsInfoModel extends _TableCardsInfoModel {
   const _$_TableCardsInfoModel(
       {required final List<TableCardModel> tableCards,
-      final List<VoteModel> votes = const [],
-      this.selectedCardId = null})
+      final List<VoteModel> votes = const []})
       : _tableCards = tableCards,
         _votes = votes,
         super._();
@@ -146,12 +128,8 @@ class _$_TableCardsInfoModel extends _TableCardsInfoModel {
   }
 
   @override
-  @JsonKey()
-  final Id? selectedCardId;
-
-  @override
   String toString() {
-    return 'TableCardsInfoModel(tableCards: $tableCards, votes: $votes, selectedCardId: $selectedCardId)';
+    return 'TableCardsInfoModel(tableCards: $tableCards, votes: $votes)';
   }
 
   @override
@@ -161,17 +139,14 @@ class _$_TableCardsInfoModel extends _TableCardsInfoModel {
             other is _$_TableCardsInfoModel &&
             const DeepCollectionEquality()
                 .equals(other._tableCards, _tableCards) &&
-            const DeepCollectionEquality().equals(other._votes, _votes) &&
-            (identical(other.selectedCardId, selectedCardId) ||
-                other.selectedCardId == selectedCardId));
+            const DeepCollectionEquality().equals(other._votes, _votes));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(_tableCards),
-      const DeepCollectionEquality().hash(_votes),
-      selectedCardId);
+      const DeepCollectionEquality().hash(_votes));
 
   @JsonKey(ignore: true)
   @override
@@ -184,16 +159,13 @@ class _$_TableCardsInfoModel extends _TableCardsInfoModel {
 abstract class _TableCardsInfoModel extends TableCardsInfoModel {
   const factory _TableCardsInfoModel(
       {required final List<TableCardModel> tableCards,
-      final List<VoteModel> votes,
-      final Id? selectedCardId}) = _$_TableCardsInfoModel;
+      final List<VoteModel> votes}) = _$_TableCardsInfoModel;
   const _TableCardsInfoModel._() : super._();
 
   @override
   List<TableCardModel> get tableCards;
   @override
   List<VoteModel> get votes;
-  @override
-  Id? get selectedCardId;
   @override
   @JsonKey(ignore: true)
   _$$_TableCardsInfoModelCopyWith<_$_TableCardsInfoModel> get copyWith =>

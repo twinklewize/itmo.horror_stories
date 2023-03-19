@@ -1,16 +1,16 @@
 DROP PROCEDURE IF EXISTS sign_up;
 
 CREATE PROCEDURE sign_up (
-    p_login VARCHAR(30),
-    p_password VARCHAR(255),
-    p_nickname VARCHAR(12)
+   IN p_login VARCHAR(30),
+   IN p_password VARCHAR(255),
+   IN p_nickname VARCHAR(12)
 )
-COMMENT "User sign up"
+COMMENT "(p_login, p_password, p_nickname)"
 SQL SECURITY DEFINER
 BEGIN
   DECLARE v_salt VARCHAR(64);
-  DECLARE out_token VARCHAR(50);
-  DECLARE out_refreshToken VARCHAR(50);
+  DECLARE v_token VARCHAR(50);
+  DECLARE v_refreshToken VARCHAR(50);
 
   -- start transaction
   START TRANSACTION;
@@ -32,14 +32,14 @@ BEGIN
   INSERT INTO Users (login, password, nickname, lastActivity)
   VALUES (p_login, p_password, p_nickname, CURRENT_TIMESTAMP);
 
-  SET out_token = UUID_SHORT();
-  SET out_refreshToken = UUID_SHORT();
+  SET v_token = SHA2(UUID_SHORT(), 256);
+  SET v_refreshToken = SHA2(UUID_SHORT(), 256);
 
   INSERT INTO Tokens (login, token, refreshToken)
-  VALUES (p_login, out_token, out_refreshToken);
+  VALUES (p_login, v_token, v_refreshToken);
 
   -- commit changes
   COMMIT;
-  SELECT out_token AS token, out_refreshToken AS refreshToken;
+  SELECT v_token AS token, v_refreshToken AS refreshToken;
 
 END;

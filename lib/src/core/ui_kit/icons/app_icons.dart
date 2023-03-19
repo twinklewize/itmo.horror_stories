@@ -42,4 +42,31 @@ class AppIcons extends BaseIcon {
           size: size,
           color: color,
         );
+
+  const AppIcons.connected({
+    double size = _kDefaultSize,
+    Color? color,
+  }) : super(
+          assetPath: 'assets/vector/figma_icons/connected.svg',
+          size: size,
+          color: color,
+        );
+
+  const AppIcons.notConnectd({
+    double size = _kDefaultSize,
+    Color? color,
+  }) : super(
+          assetPath: 'assets/vector/figma_icons/not_connected.svg',
+          size: size,
+          color: color,
+        );
+
+  const AppIcons.add({
+    double size = _kDefaultSize,
+    Color? color,
+  }) : super(
+          assetPath: 'assets/vector/figma_icons/add.svg',
+          size: size,
+          color: color,
+        );
 }

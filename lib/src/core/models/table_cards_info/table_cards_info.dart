@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:horror_stories/src/core/models/id/id.dart';
 
 import '../table_card/table_card.dart';
 import '../vote/vote.dart';
@@ -11,7 +10,6 @@ class TableCardsInfoModel with _$TableCardsInfoModel {
   const factory TableCardsInfoModel({
     required List<TableCardModel> tableCards,
     @Default([]) List<VoteModel> votes,
-    @Default(null) Id? selectedCardId,
   }) = _TableCardsInfoModel;
 
   const TableCardsInfoModel._();

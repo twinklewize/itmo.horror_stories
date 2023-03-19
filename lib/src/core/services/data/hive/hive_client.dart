@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:hive/hive.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:injectable/injectable.dart';
@@ -9,6 +11,11 @@ class HiveMemoryClient {
   late Box<dynamic> _box;
 
   Future<void> init() async {
+    try {
+      Hive.init(Directory.current.path);
+    } on Object {
+      //
+    }
     Hive.registerAdapter(SessionModelAdapter());
     _box = await Hive.openBox<dynamic>(_kBoxName);
   }

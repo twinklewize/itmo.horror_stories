@@ -69,12 +69,7 @@ class ActiveRoomsScreenPendingState extends StatelessWidget {
       children: [
         const Title2('Ваши игры'),
         const Spacer(),
-        const Title2('Загрузка'),
-        UIBox.base8x,
-        LoadingAnimationWidget.halfTriangleDot(
-          color: theme.colors.system.text,
-          size: UISize.base16x,
-        ),
+        LoadingAnimationWidget.halfTriangleDot(color: theme.colors.system.text, size: UISize.base16x),
         const Spacer(),
         DoubleButton(
           onPressed1: ActiveRoomsScreenPresenter.of(context).openMainScreen,

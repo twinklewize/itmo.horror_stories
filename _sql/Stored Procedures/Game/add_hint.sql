@@ -11,15 +11,23 @@ SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
     DECLARE v_playerId INT DEFAULT (SELECT playerId FROM Players WHERE login = v_login AND roomCode = p_roomCode);
-    DECLARE v_masterId INT DEFAULT (SELECT masterId FROM Masters WHERE roomCode = p_roomCode);
-    DECLARE v_isGameOver BOOLEAN DEFAULT (SELECT isGameOver FROM Rounds WHERE roundNumber = (SELECT roundNumber FROM Moves WHERE roomCode = p_roomCode));
+    DECLARE v_masterId INT DEFAULT (SELECT Players.playerId FROM Masters LEFT JOIN Players ON Players.playerId = Masters.playerId WHERE Players.roomCode = p_roomCode);
+    DECLARE v_isGameOver BOOLEAN DEFAULT (is_game_over(p_roomCode));
     DECLARE v_roundNumber TINYINT DEFAULT 0;
-
-    SELECT roundNumber INTO v_roundNumber FROM Moves WHERE roomCode = p_roomCode;
+    DECLARE v_newCardName VARCHAR(25);
+    
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+    ROLLBACK;
+    RESIGNAL;
+END;
 
     CALL update_game_phase(p_roomCode);
 
     START TRANSACTION;
+
+    SELECT roundNumber INTO v_roundNumber FROM Moves WHERE roomCode = p_roomCode;
+
     
     IF v_playerId <> v_masterId THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unauthorized Action: You are not the master of this room.';
@@ -44,21 +52,19 @@ BEGIN
     UPDATE HintCards SET hintStatus = p_hintStatus WHERE roomCode = p_roomCode AND cardName = p_cardName; 
 
     IF (v_roundNumber <= 4) THEN
-        INSERT INTO HintCards (roomCode, cardName)
-            SELECT p_roomCode, cardName FROM Cards WHERE cardName NOT IN (
+        SELECT cardName INTO v_newCardName FROM Cards WHERE cardName NOT IN (
                 SELECT cardName FROM HintCards WHERE roomCode = p_roomCode 
                 UNION 
                 SELECT cardName FROM TableCards WHERE roomCode = p_roomCode
             ) ORDER BY RAND() LIMIT 1;
 
-        SELECT cardName, imageUrl, description FROM Cards WHERE cardName NOT IN (
-            SELECT cardName FROM HintCards WHERE roomCode = p_roomCode
-        ) AND cardName NOT IN (
-            SELECT cardName FROM TableCards WHERE roomCode = p_roomCode AND isOnTable = 1
-        ) LIMIT 1;
+        INSERT INTO HintCards (roomCode, cardName)
+            VALUES (p_roomCode, v_newCardName);
+
+        SELECT cardName, imageUrl, description FROM Cards WHERE cardName = v_newCardName;
     END IF;
 
-    UPDATE Moves SET phase = 'voting', startedAt = NOW() WHERE roomCode = p_roomCode;
+    UPDATE Moves SET phase = 'voting', createdAt = NOW() WHERE roomCode = p_roomCode;
     
     COMMIT;
 END;

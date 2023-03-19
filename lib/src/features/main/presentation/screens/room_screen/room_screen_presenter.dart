@@ -25,30 +25,50 @@ class RoomScreenPresenter extends StatefulWidget {
 class RoomScreenPresenterState extends State<RoomScreenPresenter> {
   late RoomBloc _roomBloc;
   late GameBloc _gameBloc;
-  late final Timer _updateRoomStateTimer;
+  Timer? _updateRoomStateTimer;
 
   @override
   void initState() {
     super.initState();
     _roomBloc = getIt.get();
-    _updateRoomStateTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => _updateRoomState(),
-    );
+    _gameBloc = getIt.get();
+    _startUpdateRoomStateTimer();
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    _startUpdateRoomStateTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _updateRoomStateTimer.cancel();
+    _stopUpdateRoomStateTimer();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    _stopUpdateRoomStateTimer();
   }
 
   void startGame() {
     final room = _roomBloc.state.room;
     if (room != null) {
       _gameBloc.add(GameEvent.startGame(room));
+      _gameBloc.stream.firstWhere(
+        (state) => state.maybeMap(
+          succeeded: (_) {
+            _stopUpdateRoomStateTimer();
+            context.push(RoutePaths.game);
+            return true;
+          },
+          failed: (_) => true,
+          orElse: () => false,
+        ),
+      );
     }
-    context.push(RoutePaths.game);
   }
 
   void leaveRoom() {
@@ -56,11 +76,41 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
     if (roomCode != null) {
       _roomBloc.add(RoomEvent.leaveRoom(roomCode));
     }
+    _stopUpdateRoomStateTimer();
     context.push(RoutePaths.main);
   }
 
-  void _updateRoomState() {
+  void _stopUpdateRoomStateTimer() {
+    _updateRoomStateTimer?.cancel();
+  }
+
+  void _startUpdateRoomStateTimer() {
+    _updateRoomStateTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _updateRoomState(),
+    );
+  }
+
+  Future<void> _updateRoomState() async {
     _roomBloc.add(const RoomEvent.updateRoom());
+
+    await _roomBloc.stream.first;
+
+    if (_roomBloc.state.room?.isGameStarted == true &&
+        _roomBloc.state.room?.players.where((element) => element.isPlayer && element.isMaster).isEmpty == true) {
+      _gameBloc.add(GameEvent.joinGame(_roomBloc.state.room!));
+      _gameBloc.stream.firstWhere(
+        (state) => state.maybeMap(
+          succeeded: (_) {
+            context.push(RoutePaths.game);
+            _stopUpdateRoomStateTimer();
+            return true;
+          },
+          failed: (_) => true,
+          orElse: () => false,
+        ),
+      );
+    }
   }
 
   @override

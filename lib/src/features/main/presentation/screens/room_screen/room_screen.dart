@@ -38,22 +38,19 @@ class RoomScreenSucceededState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final roomCode = room.roomInfo.roomCode;
-    final moveTime = room.roomInfo.moveTime;
-    final playersInfo = room.playersInfo;
-
-    final masterId = room.playersInfo.masterId;
-    final playerId = room.playersInfo.playerId;
-    final isMaster = masterId == playerId;
+    final isMaster = room.players.where((element) => element.isMaster && element.isPlayer).isNotEmpty == true;
 
     return DecorativeLayout(
       children: [
-        RoomTitleWidget(roomCode: roomCode),
+        RoomTitleWidget(roomCode: room.roomInfo.roomCode),
         UIBox.base8x,
-        BodyRegular('Ход: $moveTime c'),
+        BodyRegular('Ход: ${room.roomInfo.moveTime} c'),
         UIBox.base8x,
-        PlayersWidget(playersInfo: playersInfo),
-        const Spacer(),
+        PlayersWidget(
+          players: room.players,
+          placesCount: room.roomInfo.placesCount,
+        ),
+        UIBox.base8x,
         if (isMaster)
           PrimaryButton(
             text: 'Начать игру',
@@ -80,12 +77,7 @@ class RoomScreenPendingState extends StatelessWidget {
     return DecorativeLayout(
       children: [
         const Spacer(),
-        const Title2('Загрузка'),
-        UIBox.base8x,
-        LoadingAnimationWidget.halfTriangleDot(
-          color: theme.colors.system.text,
-          size: UISize.base16x,
-        ),
+        LoadingAnimationWidget.halfTriangleDot(color: theme.colors.system.text, size: UISize.base16x),
         const Spacer(),
         SecondaryButton(
           text: 'Покинуть комнату',

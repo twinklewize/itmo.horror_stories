@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$RoomModel {
   RoomInfoModel get roomInfo => throw _privateConstructorUsedError;
-  PlayersInfoModel get playersInfo => throw _privateConstructorUsedError;
+  List<PlayerModel> get players => throw _privateConstructorUsedError;
   bool get isGameStarted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -31,12 +31,9 @@ abstract class $RoomModelCopyWith<$Res> {
       _$RoomModelCopyWithImpl<$Res, RoomModel>;
   @useResult
   $Res call(
-      {RoomInfoModel roomInfo,
-      PlayersInfoModel playersInfo,
-      bool isGameStarted});
+      {RoomInfoModel roomInfo, List<PlayerModel> players, bool isGameStarted});
 
   $RoomInfoModelCopyWith<$Res> get roomInfo;
-  $PlayersInfoModelCopyWith<$Res> get playersInfo;
 }
 
 /// @nodoc
@@ -53,7 +50,7 @@ class _$RoomModelCopyWithImpl<$Res, $Val extends RoomModel>
   @override
   $Res call({
     Object? roomInfo = null,
-    Object? playersInfo = null,
+    Object? players = null,
     Object? isGameStarted = null,
   }) {
     return _then(_value.copyWith(
@@ -61,10 +58,10 @@ class _$RoomModelCopyWithImpl<$Res, $Val extends RoomModel>
           ? _value.roomInfo
           : roomInfo // ignore: cast_nullable_to_non_nullable
               as RoomInfoModel,
-      playersInfo: null == playersInfo
-          ? _value.playersInfo
-          : playersInfo // ignore: cast_nullable_to_non_nullable
-              as PlayersInfoModel,
+      players: null == players
+          ? _value.players
+          : players // ignore: cast_nullable_to_non_nullable
+              as List<PlayerModel>,
       isGameStarted: null == isGameStarted
           ? _value.isGameStarted
           : isGameStarted // ignore: cast_nullable_to_non_nullable
@@ -79,14 +76,6 @@ class _$RoomModelCopyWithImpl<$Res, $Val extends RoomModel>
       return _then(_value.copyWith(roomInfo: value) as $Val);
     });
   }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $PlayersInfoModelCopyWith<$Res> get playersInfo {
-    return $PlayersInfoModelCopyWith<$Res>(_value.playersInfo, (value) {
-      return _then(_value.copyWith(playersInfo: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -97,14 +86,10 @@ abstract class _$$_RoomModelCopyWith<$Res> implements $RoomModelCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {RoomInfoModel roomInfo,
-      PlayersInfoModel playersInfo,
-      bool isGameStarted});
+      {RoomInfoModel roomInfo, List<PlayerModel> players, bool isGameStarted});
 
   @override
   $RoomInfoModelCopyWith<$Res> get roomInfo;
-  @override
-  $PlayersInfoModelCopyWith<$Res> get playersInfo;
 }
 
 /// @nodoc
@@ -119,7 +104,7 @@ class __$$_RoomModelCopyWithImpl<$Res>
   @override
   $Res call({
     Object? roomInfo = null,
-    Object? playersInfo = null,
+    Object? players = null,
     Object? isGameStarted = null,
   }) {
     return _then(_$_RoomModel(
@@ -127,10 +112,10 @@ class __$$_RoomModelCopyWithImpl<$Res>
           ? _value.roomInfo
           : roomInfo // ignore: cast_nullable_to_non_nullable
               as RoomInfoModel,
-      playersInfo: null == playersInfo
-          ? _value.playersInfo
-          : playersInfo // ignore: cast_nullable_to_non_nullable
-              as PlayersInfoModel,
+      players: null == players
+          ? _value._players
+          : players // ignore: cast_nullable_to_non_nullable
+              as List<PlayerModel>,
       isGameStarted: null == isGameStarted
           ? _value.isGameStarted
           : isGameStarted // ignore: cast_nullable_to_non_nullable
@@ -144,21 +129,28 @@ class __$$_RoomModelCopyWithImpl<$Res>
 class _$_RoomModel extends _RoomModel {
   const _$_RoomModel(
       {required this.roomInfo,
-      required this.playersInfo,
+      required final List<PlayerModel> players,
       this.isGameStarted = false})
-      : super._();
+      : _players = players,
+        super._();
 
   @override
   final RoomInfoModel roomInfo;
+  final List<PlayerModel> _players;
   @override
-  final PlayersInfoModel playersInfo;
+  List<PlayerModel> get players {
+    if (_players is EqualUnmodifiableListView) return _players;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_players);
+  }
+
   @override
   @JsonKey()
   final bool isGameStarted;
 
   @override
   String toString() {
-    return 'RoomModel(roomInfo: $roomInfo, playersInfo: $playersInfo, isGameStarted: $isGameStarted)';
+    return 'RoomModel(roomInfo: $roomInfo, players: $players, isGameStarted: $isGameStarted)';
   }
 
   @override
@@ -168,15 +160,14 @@ class _$_RoomModel extends _RoomModel {
             other is _$_RoomModel &&
             (identical(other.roomInfo, roomInfo) ||
                 other.roomInfo == roomInfo) &&
-            (identical(other.playersInfo, playersInfo) ||
-                other.playersInfo == playersInfo) &&
+            const DeepCollectionEquality().equals(other._players, _players) &&
             (identical(other.isGameStarted, isGameStarted) ||
                 other.isGameStarted == isGameStarted));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, roomInfo, playersInfo, isGameStarted);
+  int get hashCode => Object.hash(runtimeType, roomInfo,
+      const DeepCollectionEquality().hash(_players), isGameStarted);
 
   @JsonKey(ignore: true)
   @override
@@ -188,14 +179,14 @@ class _$_RoomModel extends _RoomModel {
 abstract class _RoomModel extends RoomModel {
   const factory _RoomModel(
       {required final RoomInfoModel roomInfo,
-      required final PlayersInfoModel playersInfo,
+      required final List<PlayerModel> players,
       final bool isGameStarted}) = _$_RoomModel;
   const _RoomModel._() : super._();
 
   @override
   RoomInfoModel get roomInfo;
   @override
-  PlayersInfoModel get playersInfo;
+  List<PlayerModel> get players;
   @override
   bool get isGameStarted;
   @override

@@ -2,13 +2,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 @immutable
-abstract class FwdIcon extends StatelessWidget {
-  const FwdIcon({
+abstract class DefaultIcon extends StatelessWidget {
+  const DefaultIcon({
     Key? key,
   }) : super(key: key);
 
-  const FwdIcon.copyWith(
-    FwdIcon baseIcon, {
+  const DefaultIcon.copyWith(
+    DefaultIcon baseIcon, {
     Color? color,
     double? size,
     double? width,
@@ -17,7 +17,7 @@ abstract class FwdIcon extends StatelessWidget {
   }) : super(key: key);
 }
 
-abstract class BaseIcon extends FwdIcon {
+abstract class BaseIcon extends DefaultIcon {
   final String _assetPath;
 
   final double width;

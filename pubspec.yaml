@@ -27,6 +27,7 @@ dependencies:
   #backend
   dio: ^5.0.1
   equatable: ^2.0.5
+  bloc_concurrency: ^0.2.1
 
   #storage
   hive: ^2.2.3

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/widgets.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
@@ -26,27 +25,50 @@ class GameScreenPresenter extends StatefulWidget {
 class GameScreenPresenterState extends State<GameScreenPresenter> {
   late RoomBloc _roomBloc;
   late GameBloc _gameBloc;
-  late Timer _updateGameStateTimer;
+  Timer? _updateGameStateTimer;
+  Timer? _updateRemainingTimeTimer;
+
+  void _stopTimers() {
+    _updateGameStateTimer?.cancel();
+    _updateRemainingTimeTimer?.cancel();
+  }
+
+  void _startTimers() {
+    _updateGameStateTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _updateGameState(),
+    );
+    _updateRemainingTimeTimer = Timer.periodic(
+      const Duration(seconds: 1),
+      (_) => _gameBloc.add(const GameEvent.tick()),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _roomBloc = getIt.get();
     _gameBloc = getIt.get();
-    _updateGameStateTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => _updateGameState(),
-    );
+
+    _startTimers();
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    _startTimers();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _updateGameStateTimer.cancel();
+    _stopTimers();
   }
 
-  void openMainScreen() {
-    context.push(RoutePaths.main);
+  @override
+  void deactivate() {
+    super.deactivate();
+    _stopTimers();
   }
 
   void leaveRoom() {
@@ -54,6 +76,7 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
     if (roomCode != null) {
       _roomBloc.add(RoomEvent.leaveRoom(roomCode));
     }
+    _stopTimers();
     context.push(RoutePaths.main);
   }
 
@@ -61,14 +84,22 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
     _gameBloc.add(GameEvent.vote(tableCardId));
   }
 
-  void chooseHint(HintCardModel hintCard) {
+  void addHint(HintCardModel hintCard) {
     _gameBloc.add(GameEvent.addHint(
       cardName: hintCard.card.cardName,
       hintStatus: hintCard.hintStatus,
     ));
   }
 
+  void openMainScreen() {
+    _stopTimers();
+    context.push(RoutePaths.main);
+  }
+
   void _updateGameState() {
+    if (_gameBloc.state.game?.currentMove.isGameOver == true) {
+      _stopTimers();
+    }
     _gameBloc.add(const GameEvent.updateGame());
   }
 

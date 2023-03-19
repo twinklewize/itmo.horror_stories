@@ -1,8 +1,11 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../../main/presentation/widgets/toast.dart';
 
 part 'auth_bloc.freezed.dart';
 part 'auth_bloc_event.dart';
@@ -37,6 +40,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthState.authorized(result));
     } catch (e) {
       emit(const AuthState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -54,6 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthState.authorized(result));
     } catch (e) {
       emit(const AuthState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -61,6 +66,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _AuthEventRestore event,
     Emitter<AuthState> emit,
   ) async {
+    emit(const AuthState.pending());
     try {
       final result = await _authRepository.restore();
       if (result == null) {
@@ -69,7 +75,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         return emit(AuthState.authorized(result));
       }
     } catch (e) {
-      emit(const AuthState.unauthorized());
+      emit(const AuthState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -77,6 +84,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _AuthEventSignOut event,
     Emitter<AuthState> emit,
   ) async {
+    await _authRepository.deleteSession();
     emit(const AuthState.unauthorized());
   }
 

@@ -15,6 +15,7 @@ class HintCardModel with _$HintCardModel {
   const factory HintCardModel({
     required CardModel card,
     required HintStatus hintStatus,
+    @Default(false) bool canBeChoosen,
   }) = _HintCardModel;
 
   const HintCardModel._();

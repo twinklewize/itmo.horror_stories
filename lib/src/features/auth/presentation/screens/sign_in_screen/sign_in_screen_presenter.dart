@@ -1,8 +1,8 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/widgets.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
-import 'package:horror_stories/src/core/services/logger/logger.dart';
 import 'package:horror_stories/src/core/services/navigation/navigation.dart';
-import 'package:logger/logger.dart';
+import '../../../../main/presentation/widgets/toast.dart';
 import '../../blocs/auth_bloc/auth_bloc.dart';
 
 class SignInScreenPresenter extends StatefulWidget {
@@ -43,11 +43,16 @@ class SignInScreenPresenterState extends State<SignInScreenPresenter> {
   }
 
   void signIn() {
+    if (_authBloc.state.isType.pending) {
+      return;
+    }
     final login = loginController.text.trim();
     final password = passwordController.text.trim();
 
     if (login.length < 5 || password.length < 5) {
-      getIt.get<AppLogger>().logger.log(Level.warning, 'Login length < 5 || Password length < 5');
+      BotToast.showWidget(
+        toastBuilder: (_) => const Toast(text: 'Длина всех полей должна быть не меньше 5 символов'),
+      );
       return;
     }
 

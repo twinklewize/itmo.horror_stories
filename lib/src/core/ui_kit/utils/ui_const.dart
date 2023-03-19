@@ -110,12 +110,12 @@ abstract class UIShadow {
     ),
   ];
 
-  static const wide = <BoxShadow>[
+  static const button = <BoxShadow>[
     BoxShadow(
       offset: Offset(0, 4),
-      blurRadius: 20,
+      blurRadius: 5,
       spreadRadius: 0,
-      color: Color(0x14000000), // Opacity 20
+      color: Color(0x00000000),
     ),
   ];
 

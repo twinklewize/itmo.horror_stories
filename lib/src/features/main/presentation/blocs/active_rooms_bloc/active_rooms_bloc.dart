@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/features/main/data/repositories/rooms_repository.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../widgets/toast.dart';
 
 part 'active_rooms_event.dart';
 part 'active_rooms_state.dart';
@@ -26,10 +29,11 @@ class ActiveRoomsBloc extends Bloc<ActiveRoomsEvent, ActiveRoomsState> {
   ) async {
     emit(const ActiveRoomsState.pending());
     try {
-      final payload = await roomsRepository.getActiveRooms();
-      emit(ActiveRoomsState.succeeded(payload.activeRooms));
+      final activeRooms = await roomsRepository.getActiveRooms();
+      emit(ActiveRoomsState.succeeded(activeRooms));
     } catch (e) {
       emit(const ActiveRoomsState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -38,10 +42,10 @@ class ActiveRoomsBloc extends Bloc<ActiveRoomsEvent, ActiveRoomsState> {
     Emitter<ActiveRoomsState> emit,
   ) async {
     try {
-      final payload = await roomsRepository.getActiveRooms();
-      emit(ActiveRoomsState.succeeded(payload.activeRooms));
+      final activeRooms = await roomsRepository.getActiveRooms();
+      emit(ActiveRoomsState.succeeded(activeRooms));
     } catch (e) {
-      emit(const ActiveRoomsState.failed('Произошла ошибка'));
+//
     }
   }
 }

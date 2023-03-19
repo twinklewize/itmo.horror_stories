@@ -18,7 +18,10 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TableCardModel {
   Id get tableCardId => throw _privateConstructorUsedError;
   CardModel get card => throw _privateConstructorUsedError;
-  dynamic get isOnTable => throw _privateConstructorUsedError;
+  bool get isOnTable => throw _privateConstructorUsedError;
+  bool get canBeVoted => throw _privateConstructorUsedError;
+  bool get isSelected => throw _privateConstructorUsedError;
+  int get votesCount => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TableCardModelCopyWith<TableCardModel> get copyWith =>
@@ -31,7 +34,13 @@ abstract class $TableCardModelCopyWith<$Res> {
           TableCardModel value, $Res Function(TableCardModel) then) =
       _$TableCardModelCopyWithImpl<$Res, TableCardModel>;
   @useResult
-  $Res call({Id tableCardId, CardModel card, dynamic isOnTable});
+  $Res call(
+      {Id tableCardId,
+      CardModel card,
+      bool isOnTable,
+      bool canBeVoted,
+      bool isSelected,
+      int votesCount});
 
   $CardModelCopyWith<$Res> get card;
 }
@@ -51,7 +60,10 @@ class _$TableCardModelCopyWithImpl<$Res, $Val extends TableCardModel>
   $Res call({
     Object? tableCardId = null,
     Object? card = null,
-    Object? isOnTable = freezed,
+    Object? isOnTable = null,
+    Object? canBeVoted = null,
+    Object? isSelected = null,
+    Object? votesCount = null,
   }) {
     return _then(_value.copyWith(
       tableCardId: null == tableCardId
@@ -62,10 +74,22 @@ class _$TableCardModelCopyWithImpl<$Res, $Val extends TableCardModel>
           ? _value.card
           : card // ignore: cast_nullable_to_non_nullable
               as CardModel,
-      isOnTable: freezed == isOnTable
+      isOnTable: null == isOnTable
           ? _value.isOnTable
           : isOnTable // ignore: cast_nullable_to_non_nullable
-              as dynamic,
+              as bool,
+      canBeVoted: null == canBeVoted
+          ? _value.canBeVoted
+          : canBeVoted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as bool,
+      votesCount: null == votesCount
+          ? _value.votesCount
+          : votesCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -86,7 +110,13 @@ abstract class _$$_TableCardModelCopyWith<$Res>
       __$$_TableCardModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Id tableCardId, CardModel card, dynamic isOnTable});
+  $Res call(
+      {Id tableCardId,
+      CardModel card,
+      bool isOnTable,
+      bool canBeVoted,
+      bool isSelected,
+      int votesCount});
 
   @override
   $CardModelCopyWith<$Res> get card;
@@ -105,7 +135,10 @@ class __$$_TableCardModelCopyWithImpl<$Res>
   $Res call({
     Object? tableCardId = null,
     Object? card = null,
-    Object? isOnTable = freezed,
+    Object? isOnTable = null,
+    Object? canBeVoted = null,
+    Object? isSelected = null,
+    Object? votesCount = null,
   }) {
     return _then(_$_TableCardModel(
       tableCardId: null == tableCardId
@@ -116,7 +149,22 @@ class __$$_TableCardModelCopyWithImpl<$Res>
           ? _value.card
           : card // ignore: cast_nullable_to_non_nullable
               as CardModel,
-      isOnTable: freezed == isOnTable ? _value.isOnTable! : isOnTable,
+      isOnTable: null == isOnTable
+          ? _value.isOnTable
+          : isOnTable // ignore: cast_nullable_to_non_nullable
+              as bool,
+      canBeVoted: null == canBeVoted
+          ? _value.canBeVoted
+          : canBeVoted // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isSelected: null == isSelected
+          ? _value.isSelected
+          : isSelected // ignore: cast_nullable_to_non_nullable
+              as bool,
+      votesCount: null == votesCount
+          ? _value.votesCount
+          : votesCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -125,7 +173,12 @@ class __$$_TableCardModelCopyWithImpl<$Res>
 
 class _$_TableCardModel extends _TableCardModel {
   const _$_TableCardModel(
-      {required this.tableCardId, required this.card, this.isOnTable = true})
+      {required this.tableCardId,
+      required this.card,
+      this.isOnTable = true,
+      this.canBeVoted = false,
+      this.isSelected = false,
+      this.votesCount = 0})
       : super._();
 
   @override
@@ -134,11 +187,20 @@ class _$_TableCardModel extends _TableCardModel {
   final CardModel card;
   @override
   @JsonKey()
-  final dynamic isOnTable;
+  final bool isOnTable;
+  @override
+  @JsonKey()
+  final bool canBeVoted;
+  @override
+  @JsonKey()
+  final bool isSelected;
+  @override
+  @JsonKey()
+  final int votesCount;
 
   @override
   String toString() {
-    return 'TableCardModel(tableCardId: $tableCardId, card: $card, isOnTable: $isOnTable)';
+    return 'TableCardModel(tableCardId: $tableCardId, card: $card, isOnTable: $isOnTable, canBeVoted: $canBeVoted, isSelected: $isSelected, votesCount: $votesCount)';
   }
 
   @override
@@ -149,12 +211,19 @@ class _$_TableCardModel extends _TableCardModel {
             (identical(other.tableCardId, tableCardId) ||
                 other.tableCardId == tableCardId) &&
             (identical(other.card, card) || other.card == card) &&
-            const DeepCollectionEquality().equals(other.isOnTable, isOnTable));
+            (identical(other.isOnTable, isOnTable) ||
+                other.isOnTable == isOnTable) &&
+            (identical(other.canBeVoted, canBeVoted) ||
+                other.canBeVoted == canBeVoted) &&
+            (identical(other.isSelected, isSelected) ||
+                other.isSelected == isSelected) &&
+            (identical(other.votesCount, votesCount) ||
+                other.votesCount == votesCount));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, tableCardId, card,
-      const DeepCollectionEquality().hash(isOnTable));
+  int get hashCode => Object.hash(runtimeType, tableCardId, card, isOnTable,
+      canBeVoted, isSelected, votesCount);
 
   @JsonKey(ignore: true)
   @override
@@ -167,7 +236,10 @@ abstract class _TableCardModel extends TableCardModel {
   const factory _TableCardModel(
       {required final Id tableCardId,
       required final CardModel card,
-      final dynamic isOnTable}) = _$_TableCardModel;
+      final bool isOnTable,
+      final bool canBeVoted,
+      final bool isSelected,
+      final int votesCount}) = _$_TableCardModel;
   const _TableCardModel._() : super._();
 
   @override
@@ -175,7 +247,13 @@ abstract class _TableCardModel extends TableCardModel {
   @override
   CardModel get card;
   @override
-  dynamic get isOnTable;
+  bool get isOnTable;
+  @override
+  bool get canBeVoted;
+  @override
+  bool get isSelected;
+  @override
+  int get votesCount;
   @override
   @JsonKey(ignore: true)
   _$$_TableCardModelCopyWith<_$_TableCardModel> get copyWith =>

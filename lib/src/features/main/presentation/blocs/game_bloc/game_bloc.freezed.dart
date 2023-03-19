@@ -23,6 +23,7 @@ mixin _$GameEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) =>
@@ -33,6 +34,7 @@ mixin _$GameEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) =>
@@ -43,6 +45,7 @@ mixin _$GameEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -54,6 +57,7 @@ mixin _$GameEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) =>
@@ -64,6 +68,7 @@ mixin _$GameEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) =>
@@ -74,6 +79,7 @@ mixin _$GameEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),
@@ -188,6 +194,7 @@ class _$_GameRestoreEvent implements _GameRestoreEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) {
@@ -201,6 +208,7 @@ class _$_GameRestoreEvent implements _GameRestoreEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) {
@@ -214,6 +222,7 @@ class _$_GameRestoreEvent implements _GameRestoreEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -231,6 +240,7 @@ class _$_GameRestoreEvent implements _GameRestoreEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) {
@@ -244,6 +254,7 @@ class _$_GameRestoreEvent implements _GameRestoreEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) {
@@ -257,6 +268,7 @@ class _$_GameRestoreEvent implements _GameRestoreEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),
@@ -359,6 +371,7 @@ class _$_GameStartEvent implements _GameStartEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) {
@@ -372,6 +385,7 @@ class _$_GameStartEvent implements _GameStartEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) {
@@ -385,6 +399,7 @@ class _$_GameStartEvent implements _GameStartEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -402,6 +417,7 @@ class _$_GameStartEvent implements _GameStartEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) {
@@ -415,6 +431,7 @@ class _$_GameStartEvent implements _GameStartEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) {
@@ -428,6 +445,7 @@ class _$_GameStartEvent implements _GameStartEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),
@@ -527,6 +545,7 @@ class _$_GameJoinEvent implements _GameJoinEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) {
@@ -540,6 +559,7 @@ class _$_GameJoinEvent implements _GameJoinEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) {
@@ -553,6 +573,7 @@ class _$_GameJoinEvent implements _GameJoinEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -570,6 +591,7 @@ class _$_GameJoinEvent implements _GameJoinEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) {
@@ -583,6 +605,7 @@ class _$_GameJoinEvent implements _GameJoinEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) {
@@ -596,6 +619,7 @@ class _$_GameJoinEvent implements _GameJoinEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),
@@ -659,6 +683,7 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) {
@@ -672,6 +697,7 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) {
@@ -685,6 +711,7 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -702,6 +729,7 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) {
@@ -715,6 +743,7 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) {
@@ -728,6 +757,7 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),
@@ -741,6 +771,139 @@ class _$_GameUpdateEvent implements _GameUpdateEvent {
 
 abstract class _GameUpdateEvent implements GameEvent {
   const factory _GameUpdateEvent() = _$_GameUpdateEvent;
+}
+
+/// @nodoc
+abstract class _$$_GameTickEventCopyWith<$Res> {
+  factory _$$_GameTickEventCopyWith(
+          _$_GameTickEvent value, $Res Function(_$_GameTickEvent) then) =
+      __$$_GameTickEventCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_GameTickEventCopyWithImpl<$Res>
+    extends _$GameEventCopyWithImpl<$Res, _$_GameTickEvent>
+    implements _$$_GameTickEventCopyWith<$Res> {
+  __$$_GameTickEventCopyWithImpl(
+      _$_GameTickEvent _value, $Res Function(_$_GameTickEvent) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_GameTickEvent implements _GameTickEvent {
+  const _$_GameTickEvent();
+
+  @override
+  String toString() {
+    return 'GameEvent.tick()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_GameTickEvent);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(RoomInfoModel roomInfo, String userNickname)
+        restoreGame,
+    required TResult Function(RoomModel room) startGame,
+    required TResult Function(RoomModel room) joinGame,
+    required TResult Function() updateGame,
+    required TResult Function() tick,
+    required TResult Function(Id tableCardId) vote,
+    required TResult Function(String cardName, HintStatus hintStatus) addHint,
+  }) {
+    return tick();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(RoomInfoModel roomInfo, String userNickname)? restoreGame,
+    TResult? Function(RoomModel room)? startGame,
+    TResult? Function(RoomModel room)? joinGame,
+    TResult? Function()? updateGame,
+    TResult? Function()? tick,
+    TResult? Function(Id tableCardId)? vote,
+    TResult? Function(String cardName, HintStatus hintStatus)? addHint,
+  }) {
+    return tick?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(RoomInfoModel roomInfo, String userNickname)? restoreGame,
+    TResult Function(RoomModel room)? startGame,
+    TResult Function(RoomModel room)? joinGame,
+    TResult Function()? updateGame,
+    TResult Function()? tick,
+    TResult Function(Id tableCardId)? vote,
+    TResult Function(String cardName, HintStatus hintStatus)? addHint,
+    required TResult orElse(),
+  }) {
+    if (tick != null) {
+      return tick();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_GameRestoreEvent value) restoreGame,
+    required TResult Function(_GameStartEvent value) startGame,
+    required TResult Function(_GameJoinEvent value) joinGame,
+    required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
+    required TResult Function(_GameVoteEvent value) vote,
+    required TResult Function(_GameAddHintEvent value) addHint,
+  }) {
+    return tick(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_GameRestoreEvent value)? restoreGame,
+    TResult? Function(_GameStartEvent value)? startGame,
+    TResult? Function(_GameJoinEvent value)? joinGame,
+    TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
+    TResult? Function(_GameVoteEvent value)? vote,
+    TResult? Function(_GameAddHintEvent value)? addHint,
+  }) {
+    return tick?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_GameRestoreEvent value)? restoreGame,
+    TResult Function(_GameStartEvent value)? startGame,
+    TResult Function(_GameJoinEvent value)? joinGame,
+    TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
+    TResult Function(_GameVoteEvent value)? vote,
+    TResult Function(_GameAddHintEvent value)? addHint,
+    required TResult orElse(),
+  }) {
+    if (tick != null) {
+      return tick(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _GameTickEvent implements GameEvent {
+  const factory _GameTickEvent() = _$_GameTickEvent;
 }
 
 /// @nodoc
@@ -813,6 +976,7 @@ class _$_GameVoteEvent implements _GameVoteEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) {
@@ -826,6 +990,7 @@ class _$_GameVoteEvent implements _GameVoteEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) {
@@ -839,6 +1004,7 @@ class _$_GameVoteEvent implements _GameVoteEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -856,6 +1022,7 @@ class _$_GameVoteEvent implements _GameVoteEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) {
@@ -869,6 +1036,7 @@ class _$_GameVoteEvent implements _GameVoteEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) {
@@ -882,6 +1050,7 @@ class _$_GameVoteEvent implements _GameVoteEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),
@@ -981,6 +1150,7 @@ class _$_GameAddHintEvent implements _GameAddHintEvent {
     required TResult Function(RoomModel room) startGame,
     required TResult Function(RoomModel room) joinGame,
     required TResult Function() updateGame,
+    required TResult Function() tick,
     required TResult Function(Id tableCardId) vote,
     required TResult Function(String cardName, HintStatus hintStatus) addHint,
   }) {
@@ -994,6 +1164,7 @@ class _$_GameAddHintEvent implements _GameAddHintEvent {
     TResult? Function(RoomModel room)? startGame,
     TResult? Function(RoomModel room)? joinGame,
     TResult? Function()? updateGame,
+    TResult? Function()? tick,
     TResult? Function(Id tableCardId)? vote,
     TResult? Function(String cardName, HintStatus hintStatus)? addHint,
   }) {
@@ -1007,6 +1178,7 @@ class _$_GameAddHintEvent implements _GameAddHintEvent {
     TResult Function(RoomModel room)? startGame,
     TResult Function(RoomModel room)? joinGame,
     TResult Function()? updateGame,
+    TResult Function()? tick,
     TResult Function(Id tableCardId)? vote,
     TResult Function(String cardName, HintStatus hintStatus)? addHint,
     required TResult orElse(),
@@ -1024,6 +1196,7 @@ class _$_GameAddHintEvent implements _GameAddHintEvent {
     required TResult Function(_GameStartEvent value) startGame,
     required TResult Function(_GameJoinEvent value) joinGame,
     required TResult Function(_GameUpdateEvent value) updateGame,
+    required TResult Function(_GameTickEvent value) tick,
     required TResult Function(_GameVoteEvent value) vote,
     required TResult Function(_GameAddHintEvent value) addHint,
   }) {
@@ -1037,6 +1210,7 @@ class _$_GameAddHintEvent implements _GameAddHintEvent {
     TResult? Function(_GameStartEvent value)? startGame,
     TResult? Function(_GameJoinEvent value)? joinGame,
     TResult? Function(_GameUpdateEvent value)? updateGame,
+    TResult? Function(_GameTickEvent value)? tick,
     TResult? Function(_GameVoteEvent value)? vote,
     TResult? Function(_GameAddHintEvent value)? addHint,
   }) {
@@ -1050,6 +1224,7 @@ class _$_GameAddHintEvent implements _GameAddHintEvent {
     TResult Function(_GameStartEvent value)? startGame,
     TResult Function(_GameJoinEvent value)? joinGame,
     TResult Function(_GameUpdateEvent value)? updateGame,
+    TResult Function(_GameTickEvent value)? tick,
     TResult Function(_GameVoteEvent value)? vote,
     TResult Function(_GameAddHintEvent value)? addHint,
     required TResult orElse(),

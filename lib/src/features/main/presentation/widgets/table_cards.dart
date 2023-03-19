@@ -6,9 +6,11 @@ import 'table_card.dart';
 class TableCardsWidget extends StatelessWidget {
   const TableCardsWidget({
     required this.tableCardsInfo,
+    required this.onPressed,
     super.key,
   });
   final TableCardsInfoModel tableCardsInfo;
+  final Function(Id tableCardId) onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +27,11 @@ class TableCardsWidget extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TableCardWidget(tableCard: tableCards[4 * i + 0]),
-                    TableCardWidget(tableCard: tableCards[4 * i + 1]),
-                    TableCardWidget(tableCard: tableCards[4 * i + 2]),
-                    TableCardWidget(tableCard: tableCards[4 * i + 3]),
+                    for (var j = 0; j < 4; j++)
+                      TableCardWidget(
+                        tableCard: tableCards[4 * i + j],
+                        onPressed: onPressed,
+                      ),
                   ],
                 ),
             ],

@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$RoomListItemModel {
   RoomInfoModel get roomInfo => throw _privateConstructorUsedError;
   int get playersCount => throw _privateConstructorUsedError;
+  bool get isGameStarted => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RoomListItemModelCopyWith<RoomListItemModel> get copyWith =>
@@ -30,7 +31,7 @@ abstract class $RoomListItemModelCopyWith<$Res> {
           RoomListItemModel value, $Res Function(RoomListItemModel) then) =
       _$RoomListItemModelCopyWithImpl<$Res, RoomListItemModel>;
   @useResult
-  $Res call({RoomInfoModel roomInfo, int playersCount});
+  $Res call({RoomInfoModel roomInfo, int playersCount, bool isGameStarted});
 
   $RoomInfoModelCopyWith<$Res> get roomInfo;
 }
@@ -50,6 +51,7 @@ class _$RoomListItemModelCopyWithImpl<$Res, $Val extends RoomListItemModel>
   $Res call({
     Object? roomInfo = null,
     Object? playersCount = null,
+    Object? isGameStarted = null,
   }) {
     return _then(_value.copyWith(
       roomInfo: null == roomInfo
@@ -60,6 +62,10 @@ class _$RoomListItemModelCopyWithImpl<$Res, $Val extends RoomListItemModel>
           ? _value.playersCount
           : playersCount // ignore: cast_nullable_to_non_nullable
               as int,
+      isGameStarted: null == isGameStarted
+          ? _value.isGameStarted
+          : isGameStarted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -80,7 +86,7 @@ abstract class _$$_RoomListItemModelCopyWith<$Res>
       __$$_RoomListItemModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({RoomInfoModel roomInfo, int playersCount});
+  $Res call({RoomInfoModel roomInfo, int playersCount, bool isGameStarted});
 
   @override
   $RoomInfoModelCopyWith<$Res> get roomInfo;
@@ -99,6 +105,7 @@ class __$$_RoomListItemModelCopyWithImpl<$Res>
   $Res call({
     Object? roomInfo = null,
     Object? playersCount = null,
+    Object? isGameStarted = null,
   }) {
     return _then(_$_RoomListItemModel(
       roomInfo: null == roomInfo
@@ -109,6 +116,10 @@ class __$$_RoomListItemModelCopyWithImpl<$Res>
           ? _value.playersCount
           : playersCount // ignore: cast_nullable_to_non_nullable
               as int,
+      isGameStarted: null == isGameStarted
+          ? _value.isGameStarted
+          : isGameStarted // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -117,17 +128,22 @@ class __$$_RoomListItemModelCopyWithImpl<$Res>
 
 class _$_RoomListItemModel extends _RoomListItemModel {
   const _$_RoomListItemModel(
-      {required this.roomInfo, required this.playersCount})
+      {required this.roomInfo,
+      required this.playersCount,
+      this.isGameStarted = false})
       : super._();
 
   @override
   final RoomInfoModel roomInfo;
   @override
   final int playersCount;
+  @override
+  @JsonKey()
+  final bool isGameStarted;
 
   @override
   String toString() {
-    return 'RoomListItemModel(roomInfo: $roomInfo, playersCount: $playersCount)';
+    return 'RoomListItemModel(roomInfo: $roomInfo, playersCount: $playersCount, isGameStarted: $isGameStarted)';
   }
 
   @override
@@ -138,11 +154,14 @@ class _$_RoomListItemModel extends _RoomListItemModel {
             (identical(other.roomInfo, roomInfo) ||
                 other.roomInfo == roomInfo) &&
             (identical(other.playersCount, playersCount) ||
-                other.playersCount == playersCount));
+                other.playersCount == playersCount) &&
+            (identical(other.isGameStarted, isGameStarted) ||
+                other.isGameStarted == isGameStarted));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, roomInfo, playersCount);
+  int get hashCode =>
+      Object.hash(runtimeType, roomInfo, playersCount, isGameStarted);
 
   @JsonKey(ignore: true)
   @override
@@ -155,13 +174,16 @@ class _$_RoomListItemModel extends _RoomListItemModel {
 abstract class _RoomListItemModel extends RoomListItemModel {
   const factory _RoomListItemModel(
       {required final RoomInfoModel roomInfo,
-      required final int playersCount}) = _$_RoomListItemModel;
+      required final int playersCount,
+      final bool isGameStarted}) = _$_RoomListItemModel;
   const _RoomListItemModel._() : super._();
 
   @override
   RoomInfoModel get roomInfo;
   @override
   int get playersCount;
+  @override
+  bool get isGameStarted;
   @override
   @JsonKey(ignore: true)
   _$$_RoomListItemModelCopyWith<_$_RoomListItemModel> get copyWith =>

@@ -8,8 +8,14 @@ CREATE PROCEDURE create_room(
 COMMENT "Create a new room and join it."
 SQL SECURITY DEFINER
 BEGIN
-    DECLARE v_login INT DEFAULT (get_login_from_token(p_token));
+    DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
     DECLARE out_playerId INT DEFAULT NULL;
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+    ROLLBACK;
+    RESIGNAL;
+END;
   
     -- start transaction
     START TRANSACTION;

@@ -9,11 +9,16 @@ class DefaultTable extends StatelessWidget {
     required this.onPressed,
   });
   final List<RoomListItemModel> rooms;
-  final Function(RoomInfoModel roomInfo) onPressed;
+  final Function(RoomListItemModel roomInfo) onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
+    if (rooms.isEmpty) {
+      return const Expanded(
+        child: Center(child: Title3('Пусто')),
+      );
+    }
     return Expanded(
       child: DecoratedBox(
         decoration: BoxDecoration(
@@ -102,7 +107,7 @@ class DefaultTable extends StatelessWidget {
             alignment: Alignment.center,
             height: UISize.base * 16,
             child: TouchableOpacity(
-              onPressed: () => onPressed(room.roomInfo),
+              onPressed: () => onPressed(room),
               child: const AppIcons.start().copyWith(
                 color: theme.colors.system.primary,
                 size: UISize.base10x,

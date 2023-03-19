@@ -1,8 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/features/main/data/repositories/rooms_repository.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../widgets/toast.dart';
 
 part 'available_rooms_event.dart';
 part 'available_rooms_state.dart';
@@ -26,10 +29,11 @@ class AvailableRoomsBloc extends Bloc<AvailableRoomsEvent, AvailableRoomsState> 
   ) async {
     emit(const AvailableRoomsState.pending());
     try {
-      final payload = await roomsRepository.getAvailableRooms();
-      emit(AvailableRoomsState.succeeded(payload.availableRooms));
+      final availableRooms = await roomsRepository.getAvailableRooms();
+      emit(AvailableRoomsState.succeeded(availableRooms));
     } catch (e) {
       emit(const AvailableRoomsState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -38,10 +42,10 @@ class AvailableRoomsBloc extends Bloc<AvailableRoomsEvent, AvailableRoomsState> 
     Emitter<AvailableRoomsState> emit,
   ) async {
     try {
-      final payload = await roomsRepository.getAvailableRooms();
-      emit(AvailableRoomsState.succeeded(payload.availableRooms));
+      final availableRooms = await roomsRepository.getAvailableRooms();
+      emit(AvailableRoomsState.succeeded(availableRooms));
     } catch (e) {
-      emit(const AvailableRoomsState.failed('Произошла ошибка'));
+      //
     }
   }
 }

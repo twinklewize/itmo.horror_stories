@@ -48,27 +48,28 @@ class _HorrorStoriesAppState extends State<HorrorStoriesApp> {
       return !state.isType.pending;
     });
 
-    setState(() {
-      isLogged = authBloc.state.maybeWhen(
-        authorized: (session) async {
-          authBloc.add(const AuthEvent.updateSession());
+    isLogged = await (authBloc.state.maybeWhen(
+      authorized: (session) async {
+        authBloc.add(const AuthEvent.restoreSession());
 
-          final state = await authBloc.stream.firstWhere((element) {
-            return element.maybeWhen(
-              pending: () => false,
-              orElse: () => true,
-            );
-          });
-
-          return state.maybeWhen(
-            authorized: (_) => true,
-            orElse: () => false,
+        final state = await authBloc.stream.firstWhere((element) {
+          return element.maybeWhen(
+            pending: () => false,
+            orElse: () => true,
           );
-        },
-        orElse: () {
-          return false;
-        },
-      ) as bool;
+        });
+
+        return state.maybeWhen(
+          authorized: (_) => true,
+          orElse: () => false,
+        );
+      },
+      orElse: () {
+        return false;
+      },
+    ));
+
+    setState(() {
       isInitialized = true;
     });
 
@@ -78,7 +79,7 @@ class _HorrorStoriesAppState extends State<HorrorStoriesApp> {
   @override
   Widget build(BuildContext context) {
     return !isInitialized
-        ? const SizedBox.shrink()
+        ? Container(color: const Color(0xFF3C3F45))
         : MaterialApp.router(
             debugShowCheckedModeBanner: false,
             routerConfig: horrorStoriesRouter.router,

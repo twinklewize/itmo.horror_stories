@@ -10,10 +10,11 @@ enum GamePhase {
 @freezed
 class MoveModel with _$MoveModel {
   const factory MoveModel({
-    required int roundNumber,
-    required GamePhase phase,
+    @Default(1) int roundNumber,
+    @Default(GamePhase.hints) GamePhase phase,
     required int remainingTime,
-    required int cardsToRemoveCount,
+    @Default(null) int? cardsToRemoveCount,
+    @Default(false) bool isGameOver,
   }) = _MoveModel;
 
   const MoveModel._();

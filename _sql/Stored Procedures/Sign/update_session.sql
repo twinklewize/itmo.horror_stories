@@ -3,12 +3,11 @@ DROP PROCEDURE IF EXISTS update_session;
 CREATE PROCEDURE update_session(
     IN p_refreshToken VARCHAR(50) 
 )
-COMMENT "Update user session by refresh token"
+COMMENT "(p_refreshToken)"
 SQL SECURITY DEFINER
 BEGIN
   DECLARE v_createdAt TIMESTAMP DEFAULT NULL;
-  DECLARE out_token VARCHAR(50);
-  DECLARE out_newRefreshToken VARCHAR(50);
+  DECLARE v_token VARCHAR(50);
 
   -- Set autocommit off and start transaction
   SET autocommit = 0;
@@ -27,16 +26,16 @@ BEGIN
   -- Update last activity time for the user in Users table
   UPDATE Users SET lastActivity = CURRENT_TIMESTAMP WHERE login = @login;
 
-  -- Generate new tokens
-  SET out_token = UUID_SHORT();
-  SET out_newRefreshToken = UUID_SHORT();
+  -- Generate new access_token
+  SET v_token = SHA2(UUID_SHORT(), 256);
 
   -- Update Tokens table with new tokens
-  UPDATE Tokens SET token = out_token, refreshToken = out_newRefreshToken WHERE refreshToken = p_refreshToken;
+  UPDATE Tokens SET token = v_token, createdAt = NOW()
+  WHERE refreshToken = p_refreshToken;
 
   -- Commit transaction and set autocommit back on
   COMMIT;
   SET autocommit = 1;
-  SELECT out_token AS token, out_newRefreshToken AS refreshToken;
 
+  SELECT v_token AS token;
 END;

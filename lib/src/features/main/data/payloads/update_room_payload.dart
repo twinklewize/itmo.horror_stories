@@ -1,13 +1,11 @@
 import 'package:horror_stories/src/core/models/models.dart';
 
 class UpdateRoomPayload {
-  final List<PlayerModel> otherPlayers;
-  final bool? isGameStarted; // возвращается только если true
-  final Id? masterId; // возвращается если игрок выбран
+  final List<PlayerModel> players;
+  final bool isGameStarted; // возвращается только если true
 
   UpdateRoomPayload({
-    required this.otherPlayers,
-    this.isGameStarted,
-    this.masterId,
+    required this.players,
+    required this.isGameStarted,
   });
 }

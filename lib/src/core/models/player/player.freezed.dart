@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PlayerModel {
   Id get playerId => throw _privateConstructorUsedError;
   String get nickname => throw _privateConstructorUsedError;
+  dynamic get isMaster => throw _privateConstructorUsedError;
+  dynamic get isPlayer => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $PlayerModelCopyWith<PlayerModel> get copyWith =>
@@ -30,7 +32,7 @@ abstract class $PlayerModelCopyWith<$Res> {
           PlayerModel value, $Res Function(PlayerModel) then) =
       _$PlayerModelCopyWithImpl<$Res, PlayerModel>;
   @useResult
-  $Res call({Id playerId, String nickname});
+  $Res call({Id playerId, String nickname, dynamic isMaster, dynamic isPlayer});
 }
 
 /// @nodoc
@@ -48,6 +50,8 @@ class _$PlayerModelCopyWithImpl<$Res, $Val extends PlayerModel>
   $Res call({
     Object? playerId = null,
     Object? nickname = null,
+    Object? isMaster = freezed,
+    Object? isPlayer = freezed,
   }) {
     return _then(_value.copyWith(
       playerId: null == playerId
@@ -58,6 +62,14 @@ class _$PlayerModelCopyWithImpl<$Res, $Val extends PlayerModel>
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
+      isMaster: freezed == isMaster
+          ? _value.isMaster
+          : isMaster // ignore: cast_nullable_to_non_nullable
+              as dynamic,
+      isPlayer: freezed == isPlayer
+          ? _value.isPlayer
+          : isPlayer // ignore: cast_nullable_to_non_nullable
+              as dynamic,
     ) as $Val);
   }
 }
@@ -70,7 +82,7 @@ abstract class _$$_PlayerModelCopyWith<$Res>
       __$$_PlayerModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Id playerId, String nickname});
+  $Res call({Id playerId, String nickname, dynamic isMaster, dynamic isPlayer});
 }
 
 /// @nodoc
@@ -86,6 +98,8 @@ class __$$_PlayerModelCopyWithImpl<$Res>
   $Res call({
     Object? playerId = null,
     Object? nickname = null,
+    Object? isMaster = freezed,
+    Object? isPlayer = freezed,
   }) {
     return _then(_$_PlayerModel(
       playerId: null == playerId
@@ -96,6 +110,8 @@ class __$$_PlayerModelCopyWithImpl<$Res>
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
+      isMaster: freezed == isMaster ? _value.isMaster! : isMaster,
+      isPlayer: freezed == isPlayer ? _value.isPlayer! : isPlayer,
     ));
   }
 }
@@ -103,17 +119,27 @@ class __$$_PlayerModelCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_PlayerModel extends _PlayerModel {
-  const _$_PlayerModel({required this.playerId, required this.nickname})
+  const _$_PlayerModel(
+      {required this.playerId,
+      required this.nickname,
+      this.isMaster = false,
+      this.isPlayer = false})
       : super._();
 
   @override
   final Id playerId;
   @override
   final String nickname;
+  @override
+  @JsonKey()
+  final dynamic isMaster;
+  @override
+  @JsonKey()
+  final dynamic isPlayer;
 
   @override
   String toString() {
-    return 'PlayerModel(playerId: $playerId, nickname: $nickname)';
+    return 'PlayerModel(playerId: $playerId, nickname: $nickname, isMaster: $isMaster, isPlayer: $isPlayer)';
   }
 
   @override
@@ -124,11 +150,18 @@ class _$_PlayerModel extends _PlayerModel {
             (identical(other.playerId, playerId) ||
                 other.playerId == playerId) &&
             (identical(other.nickname, nickname) ||
-                other.nickname == nickname));
+                other.nickname == nickname) &&
+            const DeepCollectionEquality().equals(other.isMaster, isMaster) &&
+            const DeepCollectionEquality().equals(other.isPlayer, isPlayer));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, playerId, nickname);
+  int get hashCode => Object.hash(
+      runtimeType,
+      playerId,
+      nickname,
+      const DeepCollectionEquality().hash(isMaster),
+      const DeepCollectionEquality().hash(isPlayer));
 
   @JsonKey(ignore: true)
   @override
@@ -140,13 +173,19 @@ class _$_PlayerModel extends _PlayerModel {
 abstract class _PlayerModel extends PlayerModel {
   const factory _PlayerModel(
       {required final Id playerId,
-      required final String nickname}) = _$_PlayerModel;
+      required final String nickname,
+      final dynamic isMaster,
+      final dynamic isPlayer}) = _$_PlayerModel;
   const _PlayerModel._() : super._();
 
   @override
   Id get playerId;
   @override
   String get nickname;
+  @override
+  dynamic get isMaster;
+  @override
+  dynamic get isPlayer;
   @override
   @JsonKey(ignore: true)
   _$$_PlayerModelCopyWith<_$_PlayerModel> get copyWith =>

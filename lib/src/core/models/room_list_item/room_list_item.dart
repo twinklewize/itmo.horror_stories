@@ -8,6 +8,7 @@ class RoomListItemModel with _$RoomListItemModel {
   const factory RoomListItemModel({
     required RoomInfoModel roomInfo,
     required int playersCount,
+    @Default(false) bool isGameStarted,
   }) = _RoomListItemModel;
 
   const RoomListItemModel._();

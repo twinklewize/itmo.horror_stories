@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import '../players_info/players_info.dart';
-import '../room_info/room_info.dart';
+import 'package:horror_stories/src/core/models/models.dart';
 
 part 'room.freezed.dart';
 
@@ -9,7 +7,7 @@ part 'room.freezed.dart';
 class RoomModel with _$RoomModel {
   const factory RoomModel({
     required RoomInfoModel roomInfo,
-    required PlayersInfoModel playersInfo,
+    required List<PlayerModel> players,
     @Default(false) bool isGameStarted,
   }) = _RoomModel;
 

@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$HintCardModel {
   CardModel get card => throw _privateConstructorUsedError;
   HintStatus get hintStatus => throw _privateConstructorUsedError;
+  bool get canBeChoosen => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HintCardModelCopyWith<HintCardModel> get copyWith =>
@@ -30,7 +31,7 @@ abstract class $HintCardModelCopyWith<$Res> {
           HintCardModel value, $Res Function(HintCardModel) then) =
       _$HintCardModelCopyWithImpl<$Res, HintCardModel>;
   @useResult
-  $Res call({CardModel card, HintStatus hintStatus});
+  $Res call({CardModel card, HintStatus hintStatus, bool canBeChoosen});
 
   $CardModelCopyWith<$Res> get card;
 }
@@ -50,6 +51,7 @@ class _$HintCardModelCopyWithImpl<$Res, $Val extends HintCardModel>
   $Res call({
     Object? card = null,
     Object? hintStatus = null,
+    Object? canBeChoosen = null,
   }) {
     return _then(_value.copyWith(
       card: null == card
@@ -60,6 +62,10 @@ class _$HintCardModelCopyWithImpl<$Res, $Val extends HintCardModel>
           ? _value.hintStatus
           : hintStatus // ignore: cast_nullable_to_non_nullable
               as HintStatus,
+      canBeChoosen: null == canBeChoosen
+          ? _value.canBeChoosen
+          : canBeChoosen // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 
@@ -80,7 +86,7 @@ abstract class _$$_HintCardModelCopyWith<$Res>
       __$$_HintCardModelCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({CardModel card, HintStatus hintStatus});
+  $Res call({CardModel card, HintStatus hintStatus, bool canBeChoosen});
 
   @override
   $CardModelCopyWith<$Res> get card;
@@ -99,6 +105,7 @@ class __$$_HintCardModelCopyWithImpl<$Res>
   $Res call({
     Object? card = null,
     Object? hintStatus = null,
+    Object? canBeChoosen = null,
   }) {
     return _then(_$_HintCardModel(
       card: null == card
@@ -109,6 +116,10 @@ class __$$_HintCardModelCopyWithImpl<$Res>
           ? _value.hintStatus
           : hintStatus // ignore: cast_nullable_to_non_nullable
               as HintStatus,
+      canBeChoosen: null == canBeChoosen
+          ? _value.canBeChoosen
+          : canBeChoosen // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -116,17 +127,21 @@ class __$$_HintCardModelCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_HintCardModel extends _HintCardModel {
-  const _$_HintCardModel({required this.card, required this.hintStatus})
+  const _$_HintCardModel(
+      {required this.card, required this.hintStatus, this.canBeChoosen = false})
       : super._();
 
   @override
   final CardModel card;
   @override
   final HintStatus hintStatus;
+  @override
+  @JsonKey()
+  final bool canBeChoosen;
 
   @override
   String toString() {
-    return 'HintCardModel(card: $card, hintStatus: $hintStatus)';
+    return 'HintCardModel(card: $card, hintStatus: $hintStatus, canBeChoosen: $canBeChoosen)';
   }
 
   @override
@@ -136,11 +151,13 @@ class _$_HintCardModel extends _HintCardModel {
             other is _$_HintCardModel &&
             (identical(other.card, card) || other.card == card) &&
             (identical(other.hintStatus, hintStatus) ||
-                other.hintStatus == hintStatus));
+                other.hintStatus == hintStatus) &&
+            (identical(other.canBeChoosen, canBeChoosen) ||
+                other.canBeChoosen == canBeChoosen));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, card, hintStatus);
+  int get hashCode => Object.hash(runtimeType, card, hintStatus, canBeChoosen);
 
   @JsonKey(ignore: true)
   @override
@@ -152,13 +169,16 @@ class _$_HintCardModel extends _HintCardModel {
 abstract class _HintCardModel extends HintCardModel {
   const factory _HintCardModel(
       {required final CardModel card,
-      required final HintStatus hintStatus}) = _$_HintCardModel;
+      required final HintStatus hintStatus,
+      final bool canBeChoosen}) = _$_HintCardModel;
   const _HintCardModel._() : super._();
 
   @override
   CardModel get card;
   @override
   HintStatus get hintStatus;
+  @override
+  bool get canBeChoosen;
   @override
   @JsonKey(ignore: true)
   _$$_HintCardModelCopyWith<_$_HintCardModel> get copyWith =>

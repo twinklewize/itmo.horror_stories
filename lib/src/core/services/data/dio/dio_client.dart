@@ -3,9 +3,6 @@ import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
 import 'package:horror_stories/src/config/api.dart';
-import 'package:logger/logger.dart';
-
-import '../../logger/logger.dart';
 
 const _kDefaultQueryParams = {
   'db': 285627,
@@ -29,8 +26,7 @@ class DioBackendClient {
     Map<String, String>? queryParameters,
     bool withToken = true,
   }) async {
-    final token = await extractToken();
-    getIt.get<AppLogger>().logger.log(Level.info, token);
+    final token = await _extractToken();
     try {
       final queryParams = {
         'pname': path,
@@ -44,6 +40,11 @@ class DioBackendClient {
       }
 
       final response = await _dio.get<T>(ApiConfig.api, queryParameters: queryParams);
+
+      if (((response.data as Map<String, dynamic>)["ERROR"] as String?) == 'AUTHENTIFICATION_ERROR') {
+        _updateSessionGuard();
+      }
+
       return response.data;
     } on DioError catch (error) {
       return _handleError(error);
@@ -55,6 +56,10 @@ class DioBackendClient {
   }
 }
 
-Future<String?> extractToken() async {
+Future<void> _updateSessionGuard() async {
+  await getIt<AuthRepository>().updateSession();
+}
+
+Future<String?> _extractToken() async {
   return getIt<AuthRepository>().getCachedSession()?.token;
 }

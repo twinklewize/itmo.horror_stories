@@ -25,6 +25,7 @@ class AuthRepository {
     final response = await backendClient.get<Map<String, dynamic>>(
       path: 'sign_in',
       queryParameters: {'p1': login, 'p2': password},
+      withToken: false,
     );
 
     final error = response?["ERROR"] as String?;
@@ -32,11 +33,11 @@ class AuthRepository {
 
     if (result != null) {
       final session = SessionModel(
-        token: result[0]['token'][0].toString(),
-        refreshToken: result[0]['refreshToken'][0].toString(),
-        nickname: result[0]['nickname'][0],
+        token: result[0]["token"][0].toString(),
+        refreshToken: result[0]["refreshToken"][0].toString(),
+        nickname: result[0]["nickname"][0],
       );
-      getIt.get<AppLogger>().logger.log(Level.info, session);
+      getIt.get<AppLogger>().logger.log(Level.info, result);
       await _saveSession(session);
       return session;
     } else if (error != null) {
@@ -57,6 +58,7 @@ class AuthRepository {
         'p2': password,
         'p3': nickname,
       },
+      withToken: false,
     );
 
     final error = response?["ERROR"] as String?;
@@ -68,11 +70,11 @@ class AuthRepository {
     }
     if (result != null) {
       final session = SessionModel(
-        token: result[0]['token'][0].toString(),
-        refreshToken: result[0]['refreshToken'][0].toString(),
-        nickname: result[0]['nickname'][0],
+        token: result[0]["token"][0].toString(),
+        refreshToken: result[0]["refreshToken"][0].toString(),
+        nickname: nickname,
       );
-      getIt.get<AppLogger>().logger.log(Level.info, session);
+      getIt.get<AppLogger>().logger.log(Level.info, result);
       await _saveSession(session);
       return session;
     }
@@ -80,6 +82,7 @@ class AuthRepository {
   }
 
   Future<void> deleteSession() async {
+    _cachedSession = null;
     await memoryClient.delete(_kSessionKey);
   }
 
@@ -102,8 +105,8 @@ class AuthRepository {
         getIt.get<AppLogger>().logger.log(Level.info, result);
         final session = SessionModel(
           token: result[0]['token'][0].toString(),
-          refreshToken: result[0]['refreshToken'][0].toString(),
-          nickname: result[0]['nickname'][0],
+          refreshToken: oldSession.refreshToken,
+          nickname: oldSession.nickname,
         );
         await _saveSession(session);
         return session;
@@ -115,6 +118,7 @@ class AuthRepository {
 
   Future<SessionModel?> restore() async {
     final session = await memoryClient.get<SessionModel>(_kSessionKey);
+    _cachedSession = session;
     return session;
   }
 

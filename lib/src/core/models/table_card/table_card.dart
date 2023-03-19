@@ -10,7 +10,10 @@ class TableCardModel with _$TableCardModel {
   const factory TableCardModel({
     required Id tableCardId,
     required CardModel card,
-    @Default(true) isOnTable,
+    @Default(true) bool isOnTable,
+    @Default(false) bool canBeVoted,
+    @Default(false) bool isSelected,
+    @Default(0) int votesCount,
   }) = _TableCardModel;
 
   const TableCardModel._();

@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:horror_stories/src/features/main/data/repositories/rooms_repository.dart';
+import 'package:horror_stories/src/features/main/presentation/widgets/toast.dart';
 import 'package:injectable/injectable.dart';
 
 part 'room_event.dart';
@@ -30,27 +32,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   ) async {
     emit(const RoomState.pending());
     try {
-      final payload = await roomsRepository.createRoom(event.roomInfo);
-      final playerId = payload.playerId;
-      final userNickname = getIt.get<AuthRepository>().getCachedSession()?.nickname;
-
-      final room = RoomModel(
+      final room = await roomsRepository.createRoom(
         roomInfo: event.roomInfo,
-        playersInfo: PlayersInfoModel(
-          players: [
-            PlayerModel(
-              playerId: playerId,
-              nickname: userNickname ?? '',
-            )
-          ],
-          playerId: playerId,
-          masterId: null,
-        ),
-        isGameStarted: false,
+        nickname: getIt.get<AuthRepository>().getCachedSession()?.nickname ?? '',
       );
       emit(RoomState.succeeded(room));
     } catch (e) {
       emit(const RoomState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -60,27 +49,15 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   ) async {
     emit(const RoomState.pending());
     try {
-      final payload = await roomsRepository.joinRoom(event.roomInfo.roomCode);
-      final masterId = payload.masterId;
-      final playerId = payload.playerId;
-      final otherPlayers = payload.otherPlayers;
-
-      final userNickname = event.userNickname;
-      final players = [...otherPlayers, PlayerModel(playerId: playerId, nickname: userNickname)];
-
-      final room = RoomModel(
+      final room = await roomsRepository.joinRoom(
+        nickname: event.userNickname,
         roomInfo: event.roomInfo,
-        playersInfo: PlayersInfoModel(
-          playerId: playerId,
-          players: players,
-          masterId: masterId,
-        ),
-        isGameStarted: false,
       );
 
       emit(RoomState.succeeded(room));
     } catch (e) {
       emit(const RoomState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -89,13 +66,11 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     Emitter<RoomState> emit,
   ) async {
     try {
-      final roomCode = state.room?.roomInfo.roomCode;
-      if (roomCode != null) {
-        await roomsRepository.leaveRoom(roomCode: roomCode);
-      }
+      await roomsRepository.leaveRoom(roomCode: event.roomCode);
+
       emit(const RoomState.initial());
     } catch (e) {
-      emit(const RoomState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 
@@ -104,14 +79,16 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     Emitter<RoomState> emit,
   ) async {
     try {
-      final roomCode = state.room?.roomInfo.roomCode;
-      if (roomCode != null) {
-        await roomsRepository.updateRoom(roomCode);
+      final room = state.room;
+      if (room != null) {
+        final newRoom = await roomsRepository.updateRoom(
+          player: state.room!.players.firstWhere((element) => element.isPlayer),
+          roomInfo: room.roomInfo,
+        );
+        emit(RoomState.succeeded(newRoom));
       }
-
-      // emit(RoomState.succeeded(room));
     } catch (e) {
-      emit(const RoomState.failed('Произошла ошибка'));
+      BotToast.showWidget(toastBuilder: (_) => Toast(text: e.toString()));
     }
   }
 }

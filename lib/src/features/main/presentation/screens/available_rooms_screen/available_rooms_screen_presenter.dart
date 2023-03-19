@@ -28,43 +28,51 @@ class AvailableRoomsScreenPresenterState extends State<AvailableRoomsScreenPrese
   late AvailableRoomsBloc _availableRoomsBloc;
   late RoomBloc _roomBloc;
   late AuthBloc _authBLoc;
-  late final Timer _updateAvailableRoomsTimer;
+  Timer? _updateAvailableRoomsTimer;
 
   @override
   void initState() {
     super.initState();
     _availableRoomsBloc = getIt.get();
     _authBLoc = getIt.get();
+    _roomBloc = getIt.get();
     _getAvailableRooms();
-    _updateAvailableRoomsTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => _updateAvailableRooms(),
-    );
-  }
-
-  @override
-  void activate() {
-    super.activate();
-    _updateAvailableRoomsTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => _updateAvailableRooms(),
-    );
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    _updateAvailableRoomsTimer.cancel();
+    _startUpdateAvailableRoomsTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _updateAvailableRoomsTimer.cancel();
+    _stopUpdateAvailableRoomsTimer();
+  }
+
+  @override
+  void activate() {
+    super.activate();
+    _startUpdateAvailableRoomsTimer();
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    _stopUpdateAvailableRoomsTimer();
   }
 
   void openMainScreen() {
+    _stopUpdateAvailableRoomsTimer();
     context.push(RoutePaths.main);
+  }
+
+  void _startUpdateAvailableRoomsTimer() {
+    _stopUpdateAvailableRoomsTimer();
+    _updateAvailableRoomsTimer = Timer.periodic(
+      const Duration(seconds: 10),
+      (_) => _updateAvailableRooms(),
+    );
+  }
+
+  void _stopUpdateAvailableRoomsTimer() {
+    _updateAvailableRoomsTimer?.cancel();
   }
 
   void _getAvailableRooms() {
@@ -76,15 +84,23 @@ class AvailableRoomsScreenPresenterState extends State<AvailableRoomsScreenPrese
     _availableRoomsBloc.add(const AvailableRoomsEvent.updateAvailableRooms());
   }
 
-  void joinRoom(RoomInfoModel roomInfo) {
+  void joinRoom(RoomListItemModel roomListItem) {
     final userNickname = _authBLoc.state.session?.nickname;
     if (userNickname != null) {
       _roomBloc.add(RoomEvent.joinRoom(
-        roomInfo: roomInfo,
+        roomInfo: roomListItem.roomInfo,
         userNickname: userNickname,
       ));
+      _roomBloc.stream.firstWhere((state) => state.maybeMap(
+            succeeded: (_) {
+              _stopUpdateAvailableRoomsTimer();
+              context.push(RoutePaths.room);
+              return true;
+            },
+            failed: (_) => true,
+            orElse: () => false,
+          ));
     }
-    context.push(RoutePaths.room);
   }
 
   @override

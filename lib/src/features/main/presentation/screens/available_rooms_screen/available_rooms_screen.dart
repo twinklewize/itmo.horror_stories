@@ -67,12 +67,7 @@ class AvailableRoomsScreenPendingState extends StatelessWidget {
       children: [
         const Title2('Доступные комнаты'),
         const Spacer(),
-        const Title2('Загрузка'),
-        UIBox.base8x,
-        LoadingAnimationWidget.halfTriangleDot(
-          color: theme.colors.system.text,
-          size: UISize.base16x,
-        ),
+        LoadingAnimationWidget.halfTriangleDot(color: theme.colors.system.text, size: UISize.base16x),
         const Spacer(),
         SecondaryButton(
           onPressed: AvailableRoomsScreenPresenter.of(context).openMainScreen,
