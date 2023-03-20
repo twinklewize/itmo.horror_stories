@@ -3,7 +3,7 @@ CREATE PROCEDURE restore_game (
     p_token VARCHAR(50),
     p_roomCode INT UNSIGNED
 )
-COMMENT "Get full game state"
+COMMENT "(p_token, p_roomCode)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
@@ -28,8 +28,6 @@ BEGIN
     SELECT Votes.playerId, tableCardId FROM Votes LEFT JOIN Players ON Players.playerId = Votes.playerId WHERE roomCode = p_roomCode;
 
     SET v_remaining_time = (SELECT TIMESTAMPDIFF(SECOND, NOW(), DATE_ADD((Moves.createdAt), INTERVAL Rooms.moveTime SECOND)) FROM Moves LEFT JOIN Rooms ON Rooms.roomCode = Moves.roomCode WHERE Moves.roomCode = p_roomCode);
-
-
             IF v_isGameOver = 1 THEN
         SET v_remaining_time = 0;
         END IF;
@@ -37,11 +35,11 @@ BEGIN
     IF v_playerId <> v_masterId THEN
         SELECT HintCards.cardName, Cards.description, Cards.imageUrl, hintStatus FROM HintCards LEFT JOIN Cards ON HintCards.cardName = Cards.cardName WHERE HintCards.roomCode = p_roomCode AND hintStatus <> 'hand';
         SELECT Moves.roundNumber, RoundRules.cardsToRemoveCount, Moves.phase, v_remaining_time as remainingTime FROM Moves LEFT JOIN RoundRules ON Moves.roundNumber = RoundRules.roundNumber LEFT JOIN Rooms ON Rooms.roomCode = Moves.roomCode WHERE Moves.roomCode = p_roomCode;
-        SELECT Cards.cardName, Cards.description, Cards.imageUrl, hintStatus FROM HintCards LEFT JOIN Cards ON HintCards.cardName = Cards.cardName WHERE HintCards.roomCode = p_roomCode AND hintStatus <> 'hand';
     ELSE 
         SELECT HintCards.cardName, Cards.description, Cards.imageUrl, hintStatus FROM HintCards LEFT JOIN Cards ON HintCards.cardName = Cards.cardName WHERE roomCode = p_roomCode;
         SELECT Moves.roundNumber, Moves.phase, v_remaining_time as remainingTime FROM Moves LEFT JOIN Rooms ON Rooms.roomCode = Moves.roomCode WHERE Moves.roomCode = p_roomCode;
-        SELECT HintCards.cardName, Cards.description, Cards.imageUrl, hintStatus FROM HintCards LEFT JOIN Cards ON HintCards.cardName = HintCards.cardName WHERE roomCode = p_roomCode;
-        SELECT SelectedCards.tableCardId as selectedCardId FROM SelectedCards LEFT JOIN TableCards ON TableCards.tableCardId = SelectedCards.tableCardId WHERE roomCode = p_roomCode;
     END IF; 
+    IF v_playerId = v_masterId OR v_isGameOver = 1 THEN
+    SELECT SelectedCards.tableCardId as selectedCardId FROM SelectedCards LEFT JOIN TableCards ON TableCards.tableCardId = SelectedCards.tableCardId WHERE roomCode = p_roomCode;
+    END IF;
 END;

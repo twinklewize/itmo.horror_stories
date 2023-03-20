@@ -3,7 +3,7 @@ CREATE PROCEDURE vote(
     p_token VARCHAR(50),
     p_tableCardId INT UNSIGNED
 )
-COMMENT "Add a vote of current player to a card"
+COMMENT "(p_token, p_tableCardId)"
 SQL SECURITY DEFINER
 BEGIN
 DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
@@ -30,23 +30,23 @@ END IF;
 CALL update_game_phase(v_roomCode);
 
 IF (SELECT phase FROM Moves WHERE roomCode = v_roomCode) <> 'voting' THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Is not voting phase';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Это не фаза голосования';
 END IF;
 
 IF v_isGameOver = 1 THEN 
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Game is over';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра окончена';
 END IF;
 
 IF v_maxVotesCount <= v_playerVotesCount THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Your votes is over';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Ваши голоса закончились';
 END IF;
 
 IF EXISTS (SELECT * FROM Votes WHERE tableCardId = p_tableCardId AND playerId = v_playerId) THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'You have already voted for this card';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы уже голосовали за эту карту';
 END IF;
 
 IF (SELECT isOnTable FROM TableCards WHERE tableCardId = p_tableCardId) = 0 THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Card is not on table';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Карта не на столе';
 END IF;
 
 START TRANSACTION;

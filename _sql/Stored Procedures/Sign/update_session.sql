@@ -9,8 +9,6 @@ BEGIN
   DECLARE v_createdAt TIMESTAMP DEFAULT NULL;
   DECLARE v_token VARCHAR(50);
 
-  -- Set autocommit off and start transaction
-  SET autocommit = 0;
   START TRANSACTION;
 
   -- Find user in Tokens table using refresh token and check expiry date
@@ -33,9 +31,8 @@ BEGIN
   UPDATE Tokens SET token = v_token, createdAt = NOW()
   WHERE refreshToken = p_refreshToken;
 
-  -- Commit transaction and set autocommit back on
+  -- Commit transaction 
   COMMIT;
-  SET autocommit = 1;
 
   SELECT v_token AS token;
 END;

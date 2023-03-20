@@ -4,7 +4,7 @@
         p_token VARCHAR(50),
         p_roomCode INT UNSIGNED
     )
-    COMMENT "Returns updated game state"
+    COMMENT "(p_token, p_roomCode)"
     BEGIN
         DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
         DECLARE v_playerId INT DEFAULT (SELECT playerId FROM Players WHERE login = v_login AND roomCode = p_roomCode);
@@ -17,9 +17,6 @@
         ROLLBACK;
         RESIGNAL;
     END;
-
-
-
 
         CALL update_game_phase(p_roomCode);
 

@@ -1,7 +1,7 @@
 DROP FUNCTION IF EXISTS get_login_from_token;
 CREATE FUNCTION get_login_from_token(p_token VARCHAR(50))
 RETURNS VARCHAR(30)
-COMMENT "Check if token is valid, update user lastActivity and return user login"
+COMMENT "(p_token)"
 SQL SECURITY INVOKER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT NULL;

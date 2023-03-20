@@ -3,7 +3,7 @@ CREATE PROCEDURE join_game(
     p_token VARCHAR(50),
     p_roomCode INT UNSIGNED
 )
-COMMENT "Get init game state for players"
+COMMENT "(p_token, p_roomCode)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
@@ -14,21 +14,21 @@ BEGIN
     CALL update_game_phase(p_roomCode); 
     
     IF v_playerId IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid room code';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Неправильный код комнаты';
     END IF;
 
     IF v_playerId = v_masterId THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'To get initial game state master should use start_game procedure';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не можете подсоединиться к игре';
     END IF;
 
     IF (SELECT COUNT(*) FROM Moves WHERE roomCode = p_roomCode) = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No game found';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра не найдена';
     END IF;
 
     SET v_remaining_time = (SELECT TIMESTAMPDIFF(SECOND, NOW(), DATE_ADD((Moves.createdAt), INTERVAL Rooms.moveTime SECOND)) FROM Moves LEFT JOIN Rooms ON Rooms.roomCode = Moves.roomCode WHERE Moves.roomCode = p_roomCode);
 
 
-            IF v_isGameOver = 1 THEN
+        IF v_isGameOver = 1 THEN
         SET v_remaining_time = 0;
         END IF;
 

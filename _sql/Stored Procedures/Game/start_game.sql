@@ -3,7 +3,7 @@ CREATE PROCEDURE start_game(
     p_token VARCHAR(50),
     p_roomCode INT UNSIGNED
 )
-COMMENT "Start game for master"
+COMMENT "(p_token, p_roomCode)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token)); 
@@ -19,11 +19,11 @@ BEGIN
 END;
 
     IF v_playerId <> v_masterId THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unauthorized Action: You are not the master of this room.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не мастер';
     END IF;
 
     IF EXISTS (SELECT * FROM TableCards WHERE roomCode = p_roomCode) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Game is started';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра уже началась';
     END IF;
 
     START TRANSACTION;

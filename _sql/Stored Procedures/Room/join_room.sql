@@ -4,7 +4,7 @@ CREATE PROCEDURE join_room(
     p_token VARCHAR(50), 
     p_roomCode INT UNSIGNED
 )
-COMMENT "Join room"
+COMMENT "(p_token, p_roomCode)"
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
     DECLARE v_existingPlayersCount TINYINT UNSIGNED;
@@ -20,11 +20,11 @@ END;
 
     -- Check if the game has started or not
     IF EXISTS(SELECT * FROM Moves WHERE roomCode = p_roomCode) THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Game has already started';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра уже началась';
     END IF;
 
     IF NOT EXISTS (SELECT * FROM Rooms WHERE roomCode = p_roomCode) THEN 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid Room Code';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Неправильный код комнаты';
     END IF;
 
     START TRANSACTION;
@@ -43,7 +43,7 @@ END;
     
     -- If the room is full throw an error
     IF v_isUserInRoom = 0 AND v_remainingPlacesCount <= 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'The room is already full';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'В комнате нет мест';
     -- If player is not in room and there are available seats
     ELSEIF v_isUserInRoom = 0 AND v_remainingPlacesCount > 0 THEN
         -- Add the user to the Players table

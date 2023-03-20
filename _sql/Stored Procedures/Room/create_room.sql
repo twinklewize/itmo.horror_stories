@@ -5,7 +5,7 @@ CREATE PROCEDURE create_room(
   p_moveTime TINYINT UNSIGNED,
   p_placesCount TINYINT UNSIGNED
 )
-COMMENT "Create a new room and join it."
+COMMENT "(p_token, p_roomCode, p_moveTime, p_placesCount)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
@@ -22,17 +22,17 @@ END;
 
     -- Check if room already exists
     IF EXISTS(SELECT * FROM Rooms WHERE roomCode = p_roomCode) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Room already exists';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Комната уже существует';
     END IF;
 
     -- Check if places_count is valid
     IF (p_moveTime < 30 OR p_moveTime > 120) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Move time range: 30..120';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Границы времени хода: 30..120';
     END IF; 
 
     -- Check if places_count is valid
     IF (p_placesCount < 2 OR p_placesCount > 10) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Places count range: 2..10';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Границы количества игроков: 2..10';
     END IF;
 
     -- Add room to Rooms table

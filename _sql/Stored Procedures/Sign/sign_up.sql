@@ -16,15 +16,15 @@ BEGIN
   START TRANSACTION;
 
   IF LENGTH(p_login) < 5 THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Too short login';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Слишком короткий логин';
   END IF;
 
   IF LENGTH(p_password) < 5 THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Too short password';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Слишком короткий пароль';
   END IF;
 
   IF EXISTS(SELECT * FROM Users WHERE login = p_login) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User already exists';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Пользователь уже существует';
   END IF;
 
   SET p_password = SHA2(p_password, 256);

@@ -44,6 +44,7 @@ class ActiveRoomsScreenPresenterState extends State<ActiveRoomsScreenPresenter> 
   }
 
   void _startUpdateActiveRoomsTimer() {
+    _stopUpdateActiveRoomsTimer();
     _updateActiveRoomsTimer = Timer.periodic(
       const Duration(seconds: 10),
       (_) => _updateActiveRooms(),

@@ -3,16 +3,16 @@ CREATE FUNCTION is_game_over(
     p_roomCode INT UNSIGNED
 )
 RETURNS TINYINT
-COMMENT "Check if game is over"
+COMMENT "(p_roomCode)"
 SQL SECURITY INVOKER
 BEGIN
-     DECLARE v_masterId INT DEFAULT (SELECT Players.playerId FROM Masters LEFT JOIN Players ON Players.playerId = Masters.playerId WHERE roomCode = p_roomCode);
+    DECLARE v_masterId INT DEFAULT (SELECT Players.playerId FROM Masters LEFT JOIN Players ON Players.playerId = Masters.playerId WHERE roomCode = p_roomCode);
     DECLARE v_selectedCardId INT DEFAULT (SELECT SelectedCards.tableCardId FROM SelectedCards LEFT JOIN TableCards ON SelectedCards.tableCardId = TableCards.tableCardId WHERE roomCode = p_roomCode);
     
     DECLARE v_isGameOver TINYINT DEFAULT 0;
 
 IF NOT EXISTS (SELECT * FROM Moves WHERE roomCode = p_roomCode) THEN
-  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Game is not found or has not been started';
+  SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра не найдена';
 END IF;
 
     -- Check if there is no master
@@ -25,7 +25,7 @@ END IF;
     ELSEIF ((SELECT isOnTable FROM TableCards WHERE tableCardId = v_selectedCardId) = 0) THEN
         SET v_isGameOver = 1;
     -- Check if only the main card remains on the table
-    ELSEIF (SELECT COUNT(*) FROM TableCards WHERE roomCode = p_roomCode) =10 AND ((SELECT tableCardId FROM TableCards WHERE roomCode = p_roomCode AND isOnTable = 1) = v_selectedCardId) THEN
+    ELSEIF (SELECT COUNT(*) FROM TableCards WHERE roomCode = p_roomCode and isOnTable = 1) = 1 AND ((SELECT tableCardId FROM TableCards WHERE roomCode = p_roomCode AND isOnTable = 1) = v_selectedCardId) THEN
         SET v_isGameOver = 1;
     END IF;
 

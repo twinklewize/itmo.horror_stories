@@ -3,7 +3,7 @@ CREATE PROCEDURE update_room(
     p_token VARCHAR(50),
     p_roomCode INT UNSIGNED
 )
-COMMENT "Returns room state"
+COMMENT "(p_token, p_roomCode)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
@@ -12,7 +12,7 @@ BEGIN
     DECLARE out_isGameStarted INT DEFAULT (SELECT COUNT(*) FROM Moves WHERE roomCode = p_roomCode);
     
     IF v_playerId IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User is not in room';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вас нет в этой комнате';
     END IF;
 
     -- Return otherPlayers

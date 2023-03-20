@@ -85,6 +85,7 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
   }
 
   void _startUpdateRoomStateTimer() {
+    _stopUpdateRoomStateTimer();
     _updateRoomStateTimer = Timer.periodic(
       const Duration(seconds: 5),
       (_) => _updateRoomState(),

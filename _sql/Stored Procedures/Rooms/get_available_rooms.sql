@@ -2,7 +2,7 @@ DROP PROCEDURE IF EXISTS get_available_rooms;
 CREATE PROCEDURE get_available_rooms(
     p_token VARCHAR(50)
 )
-COMMENT "Returns active user games"
+COMMENT "(p_token)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));

@@ -26,21 +26,20 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
   late RoomBloc _roomBloc;
   late GameBloc _gameBloc;
   Timer? _updateGameStateTimer;
-  Timer? _updateRemainingTimeTimer;
+  var timerUpdate = 0;
 
   void _stopTimers() {
     _updateGameStateTimer?.cancel();
-    _updateRemainingTimeTimer?.cancel();
+    setState(() {
+      timerUpdate = 0;
+    });
   }
 
   void _startTimers() {
+    _stopTimers();
     _updateGameStateTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      (_) => _updateGameState(),
-    );
-    _updateRemainingTimeTimer = Timer.periodic(
       const Duration(seconds: 1),
-      (_) => _gameBloc.add(const GameEvent.tick()),
+      (_) => _updateGameState(),
     );
   }
 
@@ -99,8 +98,15 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
   void _updateGameState() {
     if (_gameBloc.state.game?.currentMove.isGameOver == true) {
       _stopTimers();
+    } else {
+      setState(() {
+        timerUpdate++;
+      });
+      if (timerUpdate % 5 == 4) {
+        _gameBloc.add(const GameEvent.updateGame());
+      }
+      _gameBloc.add(const GameEvent.tick());
     }
-    _gameBloc.add(const GameEvent.updateGame());
   }
 
   @override

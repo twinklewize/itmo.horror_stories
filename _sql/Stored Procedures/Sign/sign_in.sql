@@ -20,9 +20,9 @@ BEGIN
 
   -- If no user found, signal error
   IF v_encryptedPassword IS NULL THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'User not found';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Пользователь не найден';
   ELSEIF NOT v_encryptedPassword = SHA2(p_password, 256) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid password';
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Неверный пароль';
   END IF;
 
   UPDATE Users SET lastActivity = CURRENT_TIMESTAMP WHERE login = p_login;

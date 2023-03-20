@@ -6,7 +6,7 @@ CREATE PROCEDURE add_hint(
     p_cardName VARCHAR(25), 
     p_hintStatus ENUM('connected', 'notConnected')
 )
-COMMENT "Add hint on table"
+COMMENT "(p_token, p_roomCode, p_cardName, p_hintStatus)"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
@@ -30,23 +30,23 @@ END;
 
     
     IF v_playerId <> v_masterId THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unauthorized Action: You are not the master of this room.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не мастер';
     END IF;
 
     IF v_isGameOver = 1 THEN 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Game is over';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра окончена';
     END IF;
 
     IF (SELECT COUNT(*) FROM HintCards WHERE roomCode = p_roomCode AND cardName = p_cardName AND hintStatus = 'hand') = 0 THEN
-       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid Hint Card Selected.';
+       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Карта не может быть выбрана';
     END IF;
 
     IF (SELECT phase FROM Moves WHERE roomCode = p_roomCode) <> 'hints' THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Is not hints phase';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Это не фаза выбора подсказок';
     END IF;
 
     IF (SELECT COUNT(*) FROM HintCards WHERE hintStatus IN ('connected', 'notConnected') AND roomCode = p_roomCode) >= v_roundNumber THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Your hint for this round is already over';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы больше не можете добавлять подсказки';
     END IF;
     
     UPDATE HintCards SET hintStatus = p_hintStatus WHERE roomCode = p_roomCode AND cardName = p_cardName; 
