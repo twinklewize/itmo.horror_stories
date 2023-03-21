@@ -17,6 +17,9 @@ BEGIN
         RESIGNAL;
     END;
 
+
+
+  START TRANSACTION;
   -- Сколько карт должно быть удалено в раунде
   SELECT cardsToRemoveCount INTO v_cardsToRemoveCount FROM Moves 
     LEFT JOIN RoundRules USING(roundNumber)
@@ -27,7 +30,6 @@ BEGIN
     WHERE EXISTS (SELECT * FROM Votes WHERE Votes.tableCardId = TableCards.tableCardId) 
     AND roomCode = p_roomCode;
 
-  START TRANSACTION;
   -- Если количество карт с голосами = количеству карт которое должно быть удалено, 
   -- удаляет все карты с голосами
   IF v_cardsWithVotesCount = v_cardsToRemoveCount THEN
@@ -53,6 +55,7 @@ WHERE TableCards.tableCardId IN (
     SELECT Votes.tableCardId 
     FROM Votes LEFT JOIN Players USING(playerId)
     WHERE Players.roomCode = p_roomCode
+    GROUP BY tableCardId
     ORDER BY RAND() 
     LIMIT v_cardsToRemoveCount
   ) AS tblCardsToRemove

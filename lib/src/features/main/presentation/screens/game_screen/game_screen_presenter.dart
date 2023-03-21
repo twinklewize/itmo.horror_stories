@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
@@ -104,8 +105,9 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
       });
       if (timerUpdate % 5 == 4) {
         _gameBloc.add(const GameEvent.updateGame());
+      } else {
+        _gameBloc.add(const GameEvent.tick());
       }
-      _gameBloc.add(const GameEvent.tick());
     }
   }
 

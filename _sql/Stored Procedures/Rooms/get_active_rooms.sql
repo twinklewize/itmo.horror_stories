@@ -10,13 +10,16 @@ BEGIN
 
     -- Возвращает активные комнаты и количество игроков в них
     SELECT 
-        Rooms.roomCode, 
-        Rooms.moveTime, 
-        Rooms.placesCount, 
-        (SELECT COUNT(*) FROM Moves WHERE Moves.roomCode=Rooms.roomCode) as isGameStarted, 
-        COUNT(Players.playerId) as playersCount
-    FROM Rooms 
-    LEFT JOIN Players USING(roomCode)
-    WHERE login = v_login 
-    GROUP BY Rooms.roomCode;
+    Rooms.roomCode, 
+    Rooms.moveTime, 
+    Rooms.placesCount, 
+    (SELECT COUNT(*) FROM Moves WHERE Moves.roomCode=Rooms.roomCode) as isGameStarted, 
+    (SELECT COUNT(*) FROM Players WHERE Players.roomCode=Rooms.roomCode) as playersCount   
+FROM 
+    Rooms JOIN Players ON Rooms.roomCode = Players.roomCode
+WHERE 
+    Players.login =v_login 
+GROUP BY 
+    Rooms.roomCode; 
+
 END;

@@ -13,13 +13,6 @@ DECLARE v_playerId INT DEFAULT (SELECT playerId FROM Players WHERE login = v_log
 DECLARE v_isMaster TINYINT UNSIGNED DEFAULT(SELECT COUNT(*) FROM Masters WHERE playerId = v_playerId);
 DECLARE v_maxVotesCount TINYINT DEFAULT (SELECT cardsToRemoveCount FROM RoundRules RIGHT JOIN Moves  USING(roundNumber) WHERE roomCode = v_roomCode);
 
-    -- Отмена транзакции на SQLEXCEPTION
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
 -- Ошибка если игра закончена
 IF is_game_over(v_roomCode) = 1 THEN 
     SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра окончена';
