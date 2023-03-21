@@ -1,10 +1,9 @@
 import 'package:horror_stories/src/core/exceptions/app_exception.dart';
+import 'package:horror_stories/src/core/models/models.dart';
+import 'package:horror_stories/src/core/services/data/dio/dio_client.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/core/services/logger/logger.dart';
 import 'package:injectable/injectable.dart';
-
-import 'package:horror_stories/src/core/models/models.dart';
-import 'package:horror_stories/src/core/services/data/dio/dio_client.dart';
 import 'package:logger/logger.dart';
 
 @singleton
@@ -206,7 +205,8 @@ class RoomsRepository {
     if (result != null) {
       getIt.get<AppLogger>().logger.log(Level.info, result);
 
-      Id? masterId = (result[2]["masterId"][0] == null) ? null : Id.fromInt(result[2]["masterId"][0]);
+      Id? masterId =
+          ((result[2]["masterId"] as List<dynamic>).isEmpty == true) ? null : Id.fromInt(result[2]["masterId"][0]);
 
       final playerIds = result[0]["playerId"];
       final nicknames = result[0]["nickname"];

@@ -1,10 +1,9 @@
 import 'package:horror_stories/src/core/exceptions/app_exception.dart';
+import 'package:horror_stories/src/core/models/models.dart';
+import 'package:horror_stories/src/core/services/data/dio/dio_client.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/core/services/logger/logger.dart';
 import 'package:injectable/injectable.dart';
-
-import 'package:horror_stories/src/core/models/models.dart';
-import 'package:horror_stories/src/core/services/data/dio/dio_client.dart';
 import 'package:logger/logger.dart';
 
 @singleton
@@ -97,22 +96,10 @@ class GameRepository {
     }
     if (result != null) {
       getIt.get<AppLogger>().logger.log(Level.info, result);
-      final roundNumber = result[0]["roundNumber"][0];
-      final phase = result[0]["phase"][0];
-      final remainingTime = result[0]["remainingTime"][0];
-      final cardsToRemoveCount = result[0]["cardsToRemoveCount"][0];
-
-      final currentMove = MoveModel(
-        roundNumber: roundNumber,
-        phase: phase == 'hints' ? GamePhase.hints : GamePhase.voting,
-        remainingTime: remainingTime,
-        cardsToRemoveCount: cardsToRemoveCount,
-      );
-
-      final tableCardIds = result[1]["tableCardId"];
-      final tableCardNames = result[1]["cardName"];
-      final tableCardImageUrls = result[1]["imageUrl"];
-      final tableCardDescriptions = result[1]["description"];
+      final tableCardIds = result[0]["tableCardId"];
+      final tableCardNames = result[0]["cardName"];
+      final tableCardImageUrls = result[0]["imageUrl"];
+      final tableCardDescriptions = result[0]["description"];
       final List<TableCardModel> tableCards = [];
       for (var i = 0; i < (tableCardIds as List<dynamic>).length; i++) {
         tableCards.add(
@@ -129,7 +116,7 @@ class GameRepository {
 
       return GameModel(
         room: room,
-        currentMove: currentMove,
+        currentMove: MoveModel(remainingTime: room.roomInfo.moveTime),
         tableCardsInfo: TableCardsInfoModel(tableCards: tableCards),
         hintCards: [],
       );

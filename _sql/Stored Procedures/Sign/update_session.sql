@@ -3,36 +3,39 @@ DROP PROCEDURE IF EXISTS update_session;
 CREATE PROCEDURE update_session(
     IN p_refreshToken VARCHAR(50) 
 )
-COMMENT "(p_refreshToken)"
+COMMENT "(p_refreshToken VARCHAR(50)) - обновляет access_token по refresh_token"
 SQL SECURITY DEFINER
 BEGIN
-  DECLARE v_createdAt TIMESTAMP DEFAULT NULL;
+  DECLARE v_login VARCHAR(30);
+  DECLARE v_createdAt TIMESTAMP;
   DECLARE v_token VARCHAR(50);
+
+    -- Отмена транзакции на SQLEXCEPTION
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
 
   START TRANSACTION;
 
-  -- Find user in Tokens table using refresh token and check expiry date
-  SELECT login, createdAt INTO @login, v_createdAt FROM Tokens WHERE refreshToken = p_refreshToken;
+  -- Находит сессию 
+  SELECT login, createdAt INTO v_login, v_createdAt FROM Tokens WHERE refreshToken = p_refreshToken;
 
-  -- If no user found, signal error
-  IF @login IS NULL THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid refresh token';
-  ELSEIF v_createdAt + INTERVAL 30 DAY <= NOW() THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Refresh token expired';
+  -- Ошибка, если пользователь не найден или refresh_token устарел
+  IF v_login IS NULL OR v_createdAt + INTERVAL 30 DAY <= NOW() THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Ошибка авторизации';
   END IF;
 
-  -- Update last activity time for the user in Users table
-  UPDATE Users SET lastActivity = CURRENT_TIMESTAMP WHERE login = @login;
-
-  -- Generate new access_token
+  -- Генерирует новый access_token
   SET v_token = SHA2(UUID_SHORT(), 256);
 
-  -- Update Tokens table with new tokens
+  -- Обновление таблицы с токенами
   UPDATE Tokens SET token = v_token, createdAt = NOW()
   WHERE refreshToken = p_refreshToken;
 
-  -- Commit transaction 
   COMMIT;
 
+  -- Возвращает access_token
   SELECT v_token AS token;
 END;

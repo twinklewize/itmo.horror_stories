@@ -1,51 +1,48 @@
 DROP PROCEDURE IF EXISTS create_room;
+
 CREATE PROCEDURE create_room(
-  p_token VARCHAR(50),
-  p_roomCode INT UNSIGNED,
-  p_moveTime TINYINT UNSIGNED,
-  p_placesCount TINYINT UNSIGNED
+  IN p_token VARCHAR(50),
+  IN p_roomCode INT UNSIGNED,
+  IN p_moveTime TINYINT UNSIGNED,
+  IN p_placesCount TINYINT UNSIGNED
 )
-COMMENT "(p_token, p_roomCode, p_moveTime, p_placesCount)"
+COMMENT "(p_token VARCHAR(50), p_roomCode TINYINT UNSIGNED, p_moveTime TINYINT UNSIGNED, p_placesCount TINYINT UNSIGNED) - создает новую комнату и возвращает пользователю его playerId в этой комнате"
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
-    DECLARE out_playerId INT DEFAULT NULL;
 
+    -- Отмена транзакции на SQLEXCEPTION
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-BEGIN
-    ROLLBACK;
-    RESIGNAL;
-END;
+    BEGIN
+      ROLLBACK;
+      RESIGNAL;
+    END;
   
-    -- start transaction
     START TRANSACTION;
-
-    -- Check if room already exists
+     -- Ошибка, если  комната уже существует
     IF EXISTS(SELECT * FROM Rooms WHERE roomCode = p_roomCode) THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Комната уже существует';
     END IF;
 
-    -- Check if places_count is valid
+     -- Ошибка, если длина хода не в границах 30-120
     IF (p_moveTime < 30 OR p_moveTime > 120) THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Границы времени хода: 30..120';
     END IF; 
 
-    -- Check if places_count is valid
+    -- Ошибка, если количество мест не в границах 2-10
     IF (p_placesCount < 2 OR p_placesCount > 10) THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Границы количества игроков: 2..10';
     END IF;
 
-    -- Add room to Rooms table
+    -- Создает комнату
     INSERT INTO Rooms(roomCode, moveTime, placesCount) 
         VALUES(p_roomCode, p_moveTime, p_placesCount);
       
-    -- Add user to the Players Table and get the playerId
+    -- Добаляет пользователя в комнату
     INSERT INTO Players(login, roomCode) 
       VALUES(v_login, p_roomCode);
 
-    -- RETURN: playerId
+    -- возвращает playerId игрока
     SELECT LAST_INSERT_ID() as playerId;
-
-    -- commit changes
     COMMIT;
 END;

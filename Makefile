@@ -1,5 +1,11 @@
 gen:
-	flutter pub run build_runner build --delete-conflicting-outputs
+	fvm flutter pub run build_runner build --delete-conflicting-outputs
 
 get:
-	flutter pub get
+	fvm flutter pub get
+
+reincarnate:
+	fvm flutter clean & fvm flutter pub get & fvm flutter doctor
+
+build_web:
+	fvm flutter build web

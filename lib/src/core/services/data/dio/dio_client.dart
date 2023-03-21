@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:horror_stories/src/config/api.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/features/auth/data/repositories/auth_repository.dart';
 import 'package:injectable/injectable.dart';
-import 'package:horror_stories/src/config/api.dart';
 
 const _kDefaultQueryParams = {
   'db': 285627,
@@ -41,7 +41,7 @@ class DioBackendClient {
 
       final response = await _dio.get<T>(ApiConfig.api, queryParameters: queryParams);
 
-      if (((response.data as Map<String, dynamic>)["ERROR"] as String?) == 'AUTHENTIFICATION_ERROR') {
+      if (((response.data as Map<String, dynamic>)["ERROR"] as String?) == 'AUTHENTICATION_ERROR') {
         _updateSessionGuard();
       }
 
