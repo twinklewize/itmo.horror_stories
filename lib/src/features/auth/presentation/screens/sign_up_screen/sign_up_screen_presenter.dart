@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/widgets.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/core/services/navigation/navigation.dart';
+
 import '../../../../main/presentation/widgets/toast.dart';
 import '../../blocs/auth_bloc/auth_bloc.dart';
 
@@ -58,7 +59,7 @@ class SignUpScreenPresenterState extends State<SignUpScreenPresenter> {
 
     _authBloc.add(AuthEvent.signUp(login, password, nickname));
     _authBloc.stream.firstWhere((state) => !state.isType.pending).then((state) {
-      if (state.session != null) context.push(RoutePaths.main);
+      if (state.session != null) context.pushReplacement(RoutePaths.main);
     });
   }
 

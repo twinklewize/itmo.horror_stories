@@ -42,7 +42,7 @@ class CreateRoomScreenPresenterState extends State<CreateRoomScreenPresenter> {
   }
 
   void openActiveGamesScreen() {
-    context.push(RoutePaths.activeGames);
+    context.pushReplacement(RoutePaths.activeGames);
   }
 
   void createRoom() {
@@ -67,7 +67,7 @@ class CreateRoomScreenPresenterState extends State<CreateRoomScreenPresenter> {
     _roomBloc.stream.firstWhere(
       (state) => state.maybeMap(
         succeeded: (_) {
-          context.push(RoutePaths.room);
+          context.pushReplacement(RoutePaths.room);
           return true;
         },
         failed: (_) => true,

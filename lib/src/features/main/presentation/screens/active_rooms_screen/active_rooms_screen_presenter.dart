@@ -61,26 +61,12 @@ class ActiveRoomsScreenPresenterState extends State<ActiveRoomsScreenPresenter> 
     _stopUpdateActiveRoomsTimer();
   }
 
-  @override
-  void activate() {
-    super.activate();
-    _startUpdateActiveRoomsTimer();
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    _stopUpdateActiveRoomsTimer();
-  }
-
   void openMainScreen() {
-    _stopUpdateActiveRoomsTimer();
-    context.push(RoutePaths.main);
+    context.pushReplacement(RoutePaths.main);
   }
 
   void openCreateRoomScreen() {
-    _stopUpdateActiveRoomsTimer();
-    context.push(RoutePaths.createRoom);
+    context.pushReplacement(RoutePaths.createRoom);
   }
 
   void restoreGame(RoomListItemModel roomListItem) {
@@ -93,8 +79,7 @@ class ActiveRoomsScreenPresenterState extends State<ActiveRoomsScreenPresenter> 
         ));
         _gameBloc.stream.firstWhere((state) => state.maybeMap(
               succeeded: (_) {
-                _stopUpdateActiveRoomsTimer();
-                context.push(RoutePaths.game);
+                context.pushReplacement(RoutePaths.game);
                 return true;
               },
               failed: (_) => true,
@@ -107,8 +92,7 @@ class ActiveRoomsScreenPresenterState extends State<ActiveRoomsScreenPresenter> 
         ));
         _roomBloc.stream.firstWhere((state) => state.maybeMap(
               succeeded: (_) {
-                _stopUpdateActiveRoomsTimer();
-                context.push(RoutePaths.room);
+                context.pushReplacement(RoutePaths.room);
                 return true;
               },
               failed: (_) => true,

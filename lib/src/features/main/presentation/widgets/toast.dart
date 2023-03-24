@@ -14,29 +14,34 @@ class Toast extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = AppTheme.of(context);
-    return Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width / 2,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(UISize.base4x),
-          color: isDark ? theme.colors.system.surfaceDark : theme.colors.system.surface,
-        ),
-        padding: const EdgeInsets.all(UISize.base12x),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            BodyBold(
-              text,
-              color: isDark ? theme.colors.system.text : theme.colors.system.textOnColors,
-              maxLines: 5,
-              textAlign: TextAlign.center,
-            ),
-            UIBox.base4x,
-            const PrimaryButton(
-              onPressed: BotToast.cleanAll,
-              text: 'Закрыть',
-            )
-          ],
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: theme.colors.system.dark.withOpacity(0.2),
+      child: Center(
+        child: Container(
+          width: MediaQuery.of(context).size.width / 2,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(UISize.base4x),
+            color: isDark ? theme.colors.system.surfaceDark : theme.colors.system.surface,
+          ),
+          padding: const EdgeInsets.all(UISize.base12x),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              BodyBold(
+                text,
+                color: isDark ? theme.colors.system.text : theme.colors.system.textOnColors,
+                maxLines: 5,
+                textAlign: TextAlign.center,
+              ),
+              UIBox.base4x,
+              const PrimaryButton(
+                onPressed: BotToast.cleanAll,
+                text: 'Закрыть',
+              )
+            ],
+          ),
         ),
       ),
     );

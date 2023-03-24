@@ -34,16 +34,22 @@ class MainScreenPresenterState extends State<MainScreenPresenter> {
   }
 
   void openAvailableRoomsScreen() {
-    context.push(RoutePaths.availableRooms);
+    context.pushReplacement(RoutePaths.availableRooms);
   }
 
   void openActiveRoomsScreen() {
-    context.push(RoutePaths.activeGames);
+    context.pushReplacement(RoutePaths.activeGames);
   }
 
   void signOut() {
     _authBloc.add(const AuthEvent.signOut());
-    context.push(RoutePaths.signIn);
+    _authBloc.stream.firstWhere((state) {
+      if (state.isType.unauthorized) {
+        context.pushReplacement(RoutePaths.signIn);
+        return true;
+      }
+      return false;
+    });
   }
 
   @override

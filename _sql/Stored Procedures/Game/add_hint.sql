@@ -21,7 +21,10 @@ BEGIN
         RESIGNAL;
     END;
 
-        -- Ошибка, если игрок не мастер
+    -- Обновляет фазу игры
+    CALL update_game_phase(p_roomCode);
+
+    -- Ошибка, если игрок не мастер
     IF NOT EXISTS (SELECT * FROM Masters WHERE playerId = v_playerId) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не мастер';
     END IF;
@@ -46,13 +49,8 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы больше не можете добавлять подсказки';
     END IF;
 
-
-    -- Обновляет фазу игры
-    CALL update_game_phase(p_roomCode);
-    
     START TRANSACTION;
     SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-    
     SELECT roundNumber INTO v_roundNumber FROM Moves WHERE roomCode = p_roomCode FOR UPDATE;
     
     -- Добавляем подсказку на стол

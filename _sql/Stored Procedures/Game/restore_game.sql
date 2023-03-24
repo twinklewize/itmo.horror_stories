@@ -13,13 +13,13 @@ BEGIN
     DECLARE v_masterId INT DEFAULT (SELECT Players.playerId FROM Masters LEFT JOIN Players USING(playerId) WHERE roomCode = p_roomCode);
     DECLARE v_remaining_time TINYINT UNSIGNED;
 
+    -- Обновляет фазу игры
+    CALL update_game_phase(p_roomCode);
+
     IF v_playerId IS NULL THEN
         -- Ошибка, если игрок не найден
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игрока нет в этой комнате';
     END IF;
-
-    -- Обновляет фазу игры
-    CALL update_game_phase(p_roomCode);
 
     START TRANSACTION;
     SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
@@ -46,12 +46,12 @@ BEGIN
     FROM Votes LEFT JOIN Players USING(playerId) 
     WHERE roomCode = p_roomCode FOR UPDATE;
 
-    -- Если remaining_time < 0 присвоить remaining_time = 0
     SELECT TIMESTAMPDIFF(SECOND, NOW(), DATE_ADD((Moves.createdAt), INTERVAL Rooms.moveTime SECOND)) INTO v_remaining_time 
     FROM Moves LEFT JOIN Rooms USING(roomCode) 
     WHERE Moves.roomCode = p_roomCode FOR UPDATE;
 
-    IF v_isGameOver = 1 THEN
+    -- Если remaining_time < 0 присвоить remaining_time = 0
+    IF remaining_time < 0 THEN
         SET v_remaining_time = 0;
     END IF;
 

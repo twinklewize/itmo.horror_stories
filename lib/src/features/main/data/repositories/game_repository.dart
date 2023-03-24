@@ -374,6 +374,7 @@ class GameRepository {
       if (gamePhase == GamePhase.voting && roundNumber == game.currentMove.roundNumber) {
         votes.addAll(game.tableCardsInfo.votes.where((element) => element.playerId == playerId));
       }
+      if (isGameOver) votes.clear();
 
       final isMaster = players.where((element) => element.isMaster && element.isPlayer).isNotEmpty;
 
@@ -420,7 +421,7 @@ class GameRepository {
     throw AppException('No results');
   }
 
-  Future<GameModel> vote({
+  Future<void> vote({
     required GameModel game,
     required Id tableCardId,
   }) async {
@@ -437,33 +438,7 @@ class GameRepository {
     }
     if (result != null) {
       getIt.get<AppLogger>().logger.log(Level.info, result);
-      final playerId = game.room.players.firstWhere((element) => element.isPlayer).playerId;
-      final votes = [
-        ...game.tableCardsInfo.votes,
-        VoteModel(
-          playerId: playerId,
-          tableCardId: tableCardId,
-        ),
-      ];
-
-      final haveRemainingVotes =
-          (game.currentMove.cardsToRemoveCount ?? 0) > votes.where((vote) => vote.playerId == playerId).length;
-
-      final tableCards = game.tableCardsInfo.tableCards
-          .map((tableCard) => TableCardModel(
-                isOnTable: tableCard.isOnTable,
-                tableCardId: tableCard.tableCardId,
-                card: tableCard.card,
-                canBeVoted: tableCardId == tableCard.tableCardId ? false : haveRemainingVotes && tableCard.canBeVoted,
-                votesCount: votes.where((element) => element.tableCardId == tableCard.tableCardId).length,
-              ))
-          .toList();
-
-      return game.copyWith(
-          tableCardsInfo: TableCardsInfoModel(
-        tableCards: tableCards,
-        votes: votes,
-      ));
+      return;
     }
     throw AppException('No results');
   }

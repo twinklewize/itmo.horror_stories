@@ -36,20 +36,8 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
   }
 
   @override
-  void activate() {
-    super.activate();
-    _startUpdateRoomStateTimer();
-  }
-
-  @override
   void dispose() {
     super.dispose();
-    _stopUpdateRoomStateTimer();
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
     _stopUpdateRoomStateTimer();
   }
 
@@ -60,8 +48,7 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
       _gameBloc.stream.firstWhere(
         (state) => state.maybeMap(
           succeeded: (_) {
-            _stopUpdateRoomStateTimer();
-            context.push(RoutePaths.game);
+            context.pushReplacement(RoutePaths.game);
             return true;
           },
           failed: (_) => true,
@@ -76,8 +63,7 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
     if (roomCode != null) {
       _roomBloc.add(RoomEvent.leaveRoom(roomCode));
     }
-    _stopUpdateRoomStateTimer();
-    context.push(RoutePaths.main);
+    context.pushReplacement(RoutePaths.main);
   }
 
   void _stopUpdateRoomStateTimer() {
@@ -85,7 +71,6 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
   }
 
   void _startUpdateRoomStateTimer() {
-    _stopUpdateRoomStateTimer();
     _updateRoomStateTimer = Timer.periodic(
       const Duration(seconds: 5),
       (_) => _updateRoomState(),
@@ -103,8 +88,7 @@ class RoomScreenPresenterState extends State<RoomScreenPresenter> {
       _gameBloc.stream.firstWhere(
         (state) => state.maybeMap(
           succeeded: (_) {
-            context.push(RoutePaths.game);
-            _stopUpdateRoomStateTimer();
+            context.pushReplacement(RoutePaths.game);
             return true;
           },
           failed: (_) => true,

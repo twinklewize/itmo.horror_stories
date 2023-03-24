@@ -46,28 +46,14 @@ class AvailableRoomsScreenPresenterState extends State<AvailableRoomsScreenPrese
     _stopUpdateAvailableRoomsTimer();
   }
 
-  @override
-  void activate() {
-    super.activate();
-    _startUpdateAvailableRoomsTimer();
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-    _stopUpdateAvailableRoomsTimer();
-  }
-
   void openMainScreen() {
-    _stopUpdateAvailableRoomsTimer();
-    context.push(RoutePaths.main);
+    context.pushReplacement(RoutePaths.main);
   }
 
   void _startUpdateAvailableRoomsTimer() {
-    _stopUpdateAvailableRoomsTimer();
     _updateAvailableRoomsTimer = Timer.periodic(
       const Duration(seconds: 10),
-      (_) => _updateAvailableRooms(),
+      (_) => _availableRoomsBloc.add(const AvailableRoomsEvent.updateAvailableRooms()),
     );
   }
 
@@ -79,11 +65,6 @@ class AvailableRoomsScreenPresenterState extends State<AvailableRoomsScreenPrese
     _availableRoomsBloc.add(const AvailableRoomsEvent.getAvailableRooms());
   }
 
-  // каждые 5 секунд
-  void _updateAvailableRooms() {
-    _availableRoomsBloc.add(const AvailableRoomsEvent.updateAvailableRooms());
-  }
-
   void joinRoom(RoomListItemModel roomListItem) {
     final userNickname = _authBLoc.state.session?.nickname;
     if (userNickname != null) {
@@ -93,8 +74,7 @@ class AvailableRoomsScreenPresenterState extends State<AvailableRoomsScreenPrese
       ));
       _roomBloc.stream.firstWhere((state) => state.maybeMap(
             succeeded: (_) {
-              _stopUpdateAvailableRoomsTimer();
-              context.push(RoutePaths.room);
+              context.pushReplacement(RoutePaths.room);
               return true;
             },
             failed: (_) => true,

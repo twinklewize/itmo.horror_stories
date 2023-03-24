@@ -1,15 +1,16 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:horror_stories/src/core/models/models.dart';
 import 'package:horror_stories/src/features/main/data/repositories/game_repository.dart';
 import 'package:horror_stories/src/features/main/presentation/widgets/toast.dart';
 import 'package:injectable/injectable.dart';
 
+part 'game_bloc.freezed.dart';
 part 'game_event.dart';
 part 'game_state.dart';
-part 'game_bloc.freezed.dart';
 
 @singleton
 class GameBloc extends Bloc<GameEvent, GameState> {
@@ -34,12 +35,14 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     Emitter<GameState> emit,
   ) async {
     final game = state.game;
-    if (game != null) {
-      var newRemainingTime = game.currentMove.remainingTime - 1;
-      newRemainingTime = newRemainingTime < 0 ? 0 : newRemainingTime;
-      final newGame = game.copyWith(currentMove: game.currentMove.copyWith(remainingTime: newRemainingTime));
-      emit(GameState.succeeded(newGame));
+    if (game == null) {
+      return;
     }
+    var newRemainingTime = game.currentMove.remainingTime - 1;
+    newRemainingTime = newRemainingTime < 0 ? 0 : newRemainingTime;
+    final newGame = game.copyWith(currentMove: game.currentMove.copyWith(remainingTime: newRemainingTime));
+    debugPrint('UPDATE $newRemainingTime');
+    emit(GameState.succeeded(newGame));
   }
 
   Future<void> _joinGame(
@@ -149,16 +152,37 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     _GameVoteEvent event,
     Emitter<GameState> emit,
   ) async {
+    final game = state.game;
+    if (game == null) {
+      return;
+    }
     try {
-      final game = state.game;
-      if (game != null) {
-        final newGame = await gameRepository.vote(
-          game: game,
-          tableCardId: event.tableCardId,
-        );
-        emit(GameState.succeeded(newGame));
-      }
+      final playerId = game.room.players.firstWhere((element) => element.isPlayer).playerId;
+      final votes = [...game.tableCardsInfo.votes, VoteModel(playerId: playerId, tableCardId: event.tableCardId)];
+
+      final haveRemainingVotes =
+          (game.currentMove.cardsToRemoveCount ?? 0) > votes.where((vote) => vote.playerId == playerId).length;
+
+      final tableCards = game.tableCardsInfo.tableCards
+          .map((tableCard) => TableCardModel(
+                isOnTable: tableCard.isOnTable,
+                tableCardId: tableCard.tableCardId,
+                card: tableCard.card,
+                canBeVoted:
+                    event.tableCardId == tableCard.tableCardId ? false : haveRemainingVotes && tableCard.canBeVoted,
+                votesCount: votes.where((element) => element.tableCardId == tableCard.tableCardId).length,
+              ))
+          .toList();
+
+      final newGame = game.copyWith(
+          tableCardsInfo: TableCardsInfoModel(
+        tableCards: tableCards,
+        votes: votes,
+      ));
+      emit(GameState.succeeded(newGame));
+      await gameRepository.vote(game: game, tableCardId: event.tableCardId);
     } catch (e) {
+      emit(GameState.succeeded(game));
       BotToast.showWidget(
         toastBuilder: (_) => Toast(text: e.toString()),
       );

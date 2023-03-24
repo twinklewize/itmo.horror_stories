@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:horror_stories/src/config/api.dart';
 import 'package:horror_stories/src/core/services/di/di.dart';
 import 'package:horror_stories/src/features/auth/data/repositories/auth_repository.dart';
+import 'package:horror_stories/src/features/auth/presentation/blocs/auth_bloc/auth_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 const _kDefaultQueryParams = {
@@ -40,10 +41,7 @@ class DioBackendClient {
       }
 
       final response = await _dio.get<T>(ApiConfig.api, queryParameters: queryParams);
-
-      if (((response.data as Map<String, dynamic>)["ERROR"] as String?) == 'AUTHENTICATION_ERROR') {
-        _updateSessionGuard();
-      }
+      _updateSessionGuard(response.data);
 
       return response.data;
     } on DioError catch (error) {
@@ -56,8 +54,10 @@ class DioBackendClient {
   }
 }
 
-Future<void> _updateSessionGuard() async {
-  await getIt<AuthRepository>().updateSession();
+Future<void> _updateSessionGuard(dynamic data) async {
+  if (((data as Map<String, dynamic>)["ERROR"] as String?) == 'AUTHENTICATION_ERROR') {
+    getIt<AuthBloc>().add(const AuthEvent.updateSession());
+  }
 }
 
 Future<String?> _extractToken() async {

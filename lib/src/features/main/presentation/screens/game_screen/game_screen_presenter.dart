@@ -27,13 +27,11 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
   late RoomBloc _roomBloc;
   late GameBloc _gameBloc;
   Timer? _updateGameStateTimer;
-  var timerUpdate = 0;
+  var timerCounter = 0;
 
   void _stopTimers() {
     _updateGameStateTimer?.cancel();
-    setState(() {
-      timerUpdate = 0;
-    });
+    timerCounter = 0;
   }
 
   void _startTimers() {
@@ -49,13 +47,6 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
     super.initState();
     _roomBloc = getIt.get();
     _gameBloc = getIt.get();
-
-    _startTimers();
-  }
-
-  @override
-  void activate() {
-    super.activate();
     _startTimers();
   }
 
@@ -65,19 +56,13 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
     _stopTimers();
   }
 
-  @override
-  void deactivate() {
-    super.deactivate();
-    _stopTimers();
-  }
-
   void leaveRoom() {
     final roomCode = _gameBloc.state.game?.room.roomInfo.roomCode;
     if (roomCode != null) {
       _roomBloc.add(RoomEvent.leaveRoom(roomCode));
     }
     _stopTimers();
-    context.push(RoutePaths.main);
+    context.pushReplacement(RoutePaths.main);
   }
 
   void vote(Id tableCardId) {
@@ -92,8 +77,7 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
   }
 
   void openMainScreen() {
-    _stopTimers();
-    context.push(RoutePaths.main);
+    context.pushReplacement(RoutePaths.main);
   }
 
   void _updateGameState() {
@@ -101,9 +85,9 @@ class GameScreenPresenterState extends State<GameScreenPresenter> {
       _stopTimers();
     } else {
       setState(() {
-        timerUpdate++;
+        timerCounter = (timerCounter + 1) % 5;
       });
-      if (timerUpdate % 5 == 4) {
+      if (timerCounter == 0) {
         _gameBloc.add(const GameEvent.updateGame());
       } else {
         _gameBloc.add(const GameEvent.tick());

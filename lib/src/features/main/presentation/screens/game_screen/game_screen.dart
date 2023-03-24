@@ -85,7 +85,8 @@ class RoomScreenSucceededState extends StatelessWidget {
                       players: game.room.players,
                     ),
                   ),
-                  if (game.room.players.where((element) => element.isMaster && element.isPlayer).isEmpty == true &&
+                  if (!game.currentMove.isGameOver &&
+                      game.room.players.where((element) => element.isMaster && element.isPlayer).isEmpty == true &&
                       game.currentMove.phase == GamePhase.voting)
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: UISize.base8x),
