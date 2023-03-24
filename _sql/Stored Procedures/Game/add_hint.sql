@@ -11,8 +11,7 @@ SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
     DECLARE v_playerId INT DEFAULT (SELECT playerId FROM Players WHERE login = v_login AND roomCode = p_roomCode);
-    DECLARE v_isMaster TINYINT UNSIGNED DEFAULT(SELECT COUNT(*) FROM Masters WHERE playerId = v_playerId);
-    DECLARE v_roundNumber TINYINT DEFAULT 0;
+    DECLARE v_roundNumber TINYINT;
     DECLARE v_newCardName VARCHAR(25);
 
     -- Отмена транзакции на SQLEXCEPTION
@@ -22,14 +21,8 @@ BEGIN
         RESIGNAL;
     END;
 
-    -- Обновляет фазу игры
-    CALL update_game_phase(p_roomCode);
-    
-    START TRANSACTION;
-    SELECT roundNumber INTO v_roundNumber FROM Moves WHERE roomCode = p_roomCode FOR UPDATE;
-
-    -- Ошибка, если игрок не мастер
-    IF v_isMaster = 0 THEN
+        -- Ошибка, если игрок не мастер
+    IF NOT EXISTS (SELECT * FROM Masters WHERE playerId = v_playerId) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не мастер';
     END IF;
 
@@ -43,7 +36,7 @@ BEGIN
        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Карта не может быть выбрана';
     END IF;
 
-    -- Ошибка, если это не фаза подсказок
+        -- Ошибка, если это не фаза подсказок
     IF (SELECT phase FROM Moves WHERE roomCode = p_roomCode) <> 'hints' THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Это не фаза выбора подсказок';
     END IF;
@@ -52,6 +45,15 @@ BEGIN
     IF (SELECT COUNT(*) FROM HintCards WHERE hintStatus IN ('connected', 'notConnected') AND roomCode = p_roomCode) >= v_roundNumber THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы больше не можете добавлять подсказки';
     END IF;
+
+
+    -- Обновляет фазу игры
+    CALL update_game_phase(p_roomCode);
+    
+    START TRANSACTION;
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    
+    SELECT roundNumber INTO v_roundNumber FROM Moves WHERE roomCode = p_roomCode FOR UPDATE;
     
     -- Добавляем подсказку на стол
     UPDATE HintCards SET hintStatus = p_hintStatus WHERE roomCode = p_roomCode AND cardName = p_cardName; 

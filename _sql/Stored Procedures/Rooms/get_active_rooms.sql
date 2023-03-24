@@ -8,18 +8,15 @@ SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
 
-    -- Возвращает активные комнаты и количество игроков в них
+    -- блокирует таблицы Rooms, Moves и Players до окончания выполнения запроса
     SELECT 
-    Rooms.roomCode, 
-    Rooms.moveTime, 
-    Rooms.placesCount, 
-    (SELECT COUNT(*) FROM Moves WHERE Moves.roomCode=Rooms.roomCode) as isGameStarted, 
-    (SELECT COUNT(*) FROM Players WHERE Players.roomCode=Rooms.roomCode) as playersCount   
-FROM 
-    Rooms JOIN Players ON Rooms.roomCode = Players.roomCode
-WHERE 
-    Players.login =v_login 
-GROUP BY 
-    Rooms.roomCode; 
-
+        Rooms.roomCode, 
+        Rooms.moveTime, 
+        Rooms.placesCount, 
+        (SELECT COUNT(*) FROM Moves WHERE Moves.roomCode=Rooms.roomCode) as isGameStarted, 
+        (SELECT COUNT(*) FROM Players WHERE Players.roomCode=Rooms.roomCode) as playersCount   
+    FROM Rooms JOIN Players USING(roomCode)
+    WHERE Players.login =v_login 
+    GROUP BY Rooms.roomCode 
+    FOR UPDATE;
 END;

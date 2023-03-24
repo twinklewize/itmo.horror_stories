@@ -1,6 +1,9 @@
 DROP TABLE IF EXISTS Votes;
+
 CREATE TABLE IF NOT EXISTS Votes (
-    playerId INT REFERENCES Players(playerId) ON UPDATE CASCADE ON DELETE CASCADE, 
-    tableCardId INT REFERENCES TableCards(tableCardId) ON UPDATE CASCADE ON DELETE CASCADE,
-    PRIMARY KEY (playerId, tableCardId)
-)
+    playerId INT,
+    tableCardId INT,
+    PRIMARY KEY (playerId, tableCardId),
+    FOREIGN KEY (playerId) REFERENCES Players(playerId) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (tableCardId) REFERENCES TableCards(tableCardId) ON UPDATE CASCADE ON DELETE CASCADE
+);

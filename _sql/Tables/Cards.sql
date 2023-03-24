@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS Cards;
 CREATE TABLE IF NOT EXISTS Cards (
-cardName VARCHAR(25) PRIMARY KEY, 
-description VARCHAR(255) UNIQUE NOT NULL,
-imageUrl VARCHAR(255) NOT NULL,
-INDEX (cardName)
+    cardName VARCHAR(25) PRIMARY KEY, 
+    description VARCHAR(255) UNIQUE NOT NULL,
+    imageUrl VARCHAR(255) NOT NULL,
+    INDEX (cardName)
 );
 
 INSERT INTO Cards (cardName, description, imageUrl) VALUES 
@@ -36,4 +36,4 @@ INSERT INTO Cards (cardName, description, imageUrl) VALUES
 ('СКЕЛЕТ', 'Известен со Средних веков. Оживший мертвец, вооруженный средневековым оружием.', 'https://i.ibb.co/W2pJ5RP/image.png'), 
 ('ЧЕЛОВЕК-НЕВИДИМКА', 'В фольклоре с древних времен. Один из самых известных - Гриффин из романа Герберта Уэллса.', 'https://i.ibb.co/XtvjYZ3/image.png'), 
 ('ЧУДОВИЩЕ ФРАНКЕНШТЕЙНА', 'Персонаж Мэри Шелли 1818 года. Создан из частей трупов, совершает насилие из-за гнева и отчаяния.', 'https://i.ibb.co/rGtPv3K/image.png'), 
-('ЮРЭЙ', 'Японский фольклор. Неупокоенный дух, который скитается по земле в надежде на отмщение.', 'https://i.ibb.co/xGtfq8W/image.png')
+('ЮРЭЙ', 'Японский фольклор. Неупокоенный дух, который скитается по земле в надежде на отмщение.', 'https://i.ibb.co/xGtfq8W/image.png');

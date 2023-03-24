@@ -12,13 +12,6 @@ BEGIN
     DECLARE v_remainingPlacesCount TINYINT UNSIGNED;
     DECLARE v_isUserInRoom TINYINT DEFAULT(SELECT COUNT(*) FROM Players WHERE roomCode = p_roomCode AND login = v_login);
 
-    -- Отмена транзакции на SQLEXCEPTION
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        ROLLBACK;
-        RESIGNAL;
-    END;
-
     -- Ошибка, если игра уже началась
     IF EXISTS(SELECT * FROM Moves WHERE roomCode = p_roomCode) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра уже началась';
@@ -30,6 +23,7 @@ BEGIN
     END IF;
 
     START TRANSACTION;
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
     
     SELECT placesCount, COUNT(*) AS existingPlayersCount 
     INTO v_placesCount, v_existingPlayersCount 
@@ -63,7 +57,8 @@ BEGIN
     SELECT playerId, Users.nickname 
     FROM Players 
     LEFT JOIN Users USING(login)
-    WHERE roomCode = p_roomCode AND Players.login <> v_login;
+    WHERE roomCode = p_roomCode AND Players.login <> v_login
+    FOR UPDATE;
 
     COMMIT;
 END;

@@ -11,6 +11,7 @@ BEGIN
         END;
 
      START TRANSACTION;
+     SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
      -- Удаляет комнаты (ON DELETE CASCADE не работает)
      DELETE FROM Players WHERE (SELECT TIMESTAMPDIFF(SECOND, lastActivity, NOW()) > 10800);
      DELETE FROM Rooms WHERE NOT EXISTS (SELECT * FROM Players WHERE Players.roomCode = Rooms.roomCode);

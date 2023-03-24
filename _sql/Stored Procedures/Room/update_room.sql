@@ -9,16 +9,35 @@ SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
     DECLARE v_playerId INT DEFAULT (SELECT playerId FROM Players WHERE login = v_login AND roomCode = p_roomCode);
-    
+   
     -- Ошибка, если игрока нет в этой комнате
     IF v_playerId IS NULL THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вас нет в этой комнате';
     END IF;
 
+    -- Начало транзакции
+    START TRANSACTION;
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+
     -- Возвращает других игроков
-    SELECT playerId, Users.nickname FROM Players LEFT JOIN Users USING(login) WHERE Players.login <> v_login AND roomCode = p_roomCode;
+    SELECT playerId, Users.nickname 
+    FROM Players 
+    LEFT JOIN Users USING(login) 
+    WHERE Players.login <> v_login AND roomCode = p_roomCode 
+    FOR UPDATE;
+    
     -- Возвращает началась ли игра
-    SELECT COUNT(*) as isGameStarted FROM Moves WHERE roomCode = p_roomCode;
+    SELECT COUNT(*) as isGameStarted 
+    FROM Moves 
+    WHERE roomCode = p_roomCode FOR UPDATE;
+
     -- Возвращает id мастера
-    SELECT Players.playerId as masterId FROM Masters LEFT JOIN Players USING(playerId) WHERE roomCode = p_roomCode;
+    SELECT Players.playerId as masterId 
+    FROM Masters 
+    LEFT JOIN Players 
+    USING(playerId) 
+    WHERE roomCode = p_roomCode FOR UPDATE;
+  
+    -- Конец транзакции
+    COMMIT;
 END;

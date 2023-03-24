@@ -9,7 +9,7 @@ BEGIN
   DECLARE v_cardsToRemoveCount  TINYINT;
   DECLARE v_cardsWithVotesCount  TINYINT;
   DECLARE v_remainingCardsToRemoveCount TINYINT;
-
+   
       -- Отмена транзакции на SQLEXCEPTION
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -17,18 +17,18 @@ BEGIN
         RESIGNAL;
     END;
 
-
-
   START TRANSACTION;
+  SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
   -- Сколько карт должно быть удалено в раунде
   SELECT cardsToRemoveCount INTO v_cardsToRemoveCount FROM Moves 
     LEFT JOIN RoundRules USING(roundNumber)
     WHERE roomCode = p_roomCode;
 
   -- Сколько карт имеют голоса
-  SELECT COUNT(*) INTO v_cardsWithVotesCount FROM TableCards 
-    WHERE EXISTS (SELECT * FROM Votes WHERE Votes.tableCardId = TableCards.tableCardId) 
-    AND roomCode = p_roomCode;
+  SELECT COUNT(*) INTO v_cardsWithVotesCount 
+  FROM TableCards 
+    WHERE EXISTS (SELECT * FROM Votes WHERE Votes.tableCardId = TableCards.tableCardId) AND roomCode = p_roomCode 
+    FOR UPDATE;
 
   -- Если количество карт с голосами = количеству карт которое должно быть удалено, 
   -- удаляет все карты с голосами
@@ -102,3 +102,4 @@ WHERE TableCards.tableCardId IN (
   DELETE FROM Votes WHERE tableCardId IN (SELECT TableCards.tableCardId FROM TableCards WHERE roomCode = p_roomCode);
   COMMIT;
 END;
+

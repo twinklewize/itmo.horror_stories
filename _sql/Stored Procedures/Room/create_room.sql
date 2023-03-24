@@ -11,20 +11,7 @@ SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token));
 
-    -- Отмена транзакции на SQLEXCEPTION
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-      ROLLBACK;
-      RESIGNAL;
-    END;
-  
-    START TRANSACTION;
-     -- Ошибка, если  комната уже существует
-    IF EXISTS(SELECT * FROM Rooms WHERE roomCode = p_roomCode) THEN
-      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Комната уже существует';
-    END IF;
-
-     -- Ошибка, если длина хода не в границах 30-120
+    -- Ошибка, если длина хода не в границах 30-120
     IF (p_moveTime < 30 OR p_moveTime > 120) THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Границы времени хода: 30..120';
     END IF; 
@@ -34,15 +21,20 @@ BEGIN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Границы количества игроков: 2..10';
     END IF;
 
+    -- Ошибка, если  комната уже существует
+    IF EXISTS(SELECT * FROM Rooms WHERE roomCode = p_roomCode) THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Комната уже существует';
+    END IF;
+  
+    START TRANSACTION;
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
     -- Создает комнату
-    INSERT INTO Rooms(roomCode, moveTime, placesCount) 
-        VALUES(p_roomCode, p_moveTime, p_placesCount);
-      
-    -- Добаляет пользователя в комнату
-    INSERT INTO Players(login, roomCode) 
-      VALUES(v_login, p_roomCode);
-
-    -- возвращает playerId игрока
-    SELECT LAST_INSERT_ID() as playerId;
+    INSERT INTO Rooms(roomCode, moveTime, placesCount) VALUES(p_roomCode, p_moveTime, p_placesCount);
+    
+    -- Добавляем пользователя в комнату
+    INSERT INTO Players(login, roomCode) VALUES(v_login, p_roomCode);
+    
+    -- Возвращаем playerId игрока
+    SELECT LAST_INSERT_ID() as playerId FOR UPDATE;
     COMMIT;
 END;

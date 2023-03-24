@@ -9,24 +9,26 @@ SQL SECURITY DEFINER
 BEGIN
     DECLARE v_login VARCHAR(30) DEFAULT (get_login_from_token(p_token)); 
     DECLARE v_playerId INT DEFAULT (SELECT playerId FROM Players WHERE login = v_login AND roomCode = p_roomCode);
-    DECLARE v_isMaster TINYINT UNSIGNED DEFAULT(SELECT COUNT(*) FROM Masters WHERE playerId = v_playerId);
 
--- Отмена транзакции на SQLEXCEPTION
-DECLARE EXIT HANDLER FOR SQLEXCEPTION
-BEGIN
-    ROLLBACK;
-    RESIGNAL;
-END;
-    -- Ошибка, если игрок не мастер 
-    IF v_isMaster = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не мастер';
-    END IF;
+    -- Отмена транзакции на SQLEXCEPTION
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
     -- Ошибка, если игра уже началась 
     IF EXISTS (SELECT * FROM Moves WHERE roomCode = p_roomCode) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Игра уже началась';
     END IF;
 
+    -- Ошибка, если игрок не мастер 
+    IF NOT EXISTS (SELECT * FROM Masters WHERE playerId = v_playerId) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вы не мастер';
+    END IF;
+
     START TRANSACTION;
+    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
 
     -- Генерирует 12 tableCards
     INSERT INTO TableCards (roomCode, cardName)
@@ -43,7 +45,7 @@ END;
     ) ORDER BY RAND() LIMIT 5;
 
     -- Начинает раунд
-    INSERT INTO Moves (roundNumber, roomCode) VALUES (1, p_roomCode);
+    INSERT INTO Moves (roomCode) VALUES (p_roomCode);
     COMMIT;
 
     -- Возвращает карты подсказок
@@ -59,5 +61,7 @@ END;
     WHERE roomCode = p_roomCode;
 
     -- Возвращает SelectedCardId
-    SELECT SelectedCards.tableCardId as selectedCardId FROM SelectedCards LEFT JOIN TableCards ON SelectedCards.tableCardId = TableCards.tableCardId WHERE roomCode = p_roomCode;
+    SELECT SelectedCards.tableCardId as selectedCardId 
+    FROM SelectedCards LEFT JOIN TableCards USING(tableCardId)
+    WHERE roomCode = p_roomCode;
 END;

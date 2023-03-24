@@ -4,7 +4,7 @@ CREATE FUNCTION is_game_over(
     p_roomCode INT UNSIGNED
 )
 RETURNS TINYINT
-COMMENT "(p_roomCode) - возвращает 1, если игра закончилась"
+COMMENT "(p_roomCode INT UNSIGNED) - возвращает 1, если игра закончилась"
 SQL SECURITY INVOKER
 BEGIN
     DECLARE v_masterId INT DEFAULT (SELECT Players.playerId FROM Masters LEFT JOIN Players USING(playerId) WHERE roomCode = p_roomCode);
@@ -20,7 +20,6 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM Masters LEFT JOIN Players USING(playerId) WHERE roomCode = p_roomCode) THEN
         SET v_isGameOver = 1;
     -- Если в комнате нет других игроков кроме мастера
-    
     ELSEIF NOT EXISTS (SELECT * FROM Players WHERE roomCode = p_roomCode AND playerId <> v_masterId) THEN
         SET v_isGameOver = 1;
     -- Если selected_card не на столе

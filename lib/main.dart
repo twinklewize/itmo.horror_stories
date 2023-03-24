@@ -4,9 +4,10 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:horror_stories/src/core/services/data/hive/hive_client.dart';
 import 'package:horror_stories/src/core/services/navigation/navigation.dart';
+
+import 'src/core/services/di/di.dart';
 import 'src/core/ui_kit/theme/global_theme.dart';
 import 'src/core/ui_kit/ui_kit.dart';
-import 'src/core/services/di/di.dart';
 import 'src/features/auth/presentation/blocs/auth_bloc/auth_bloc.dart';
 
 Future<void> main() async {
