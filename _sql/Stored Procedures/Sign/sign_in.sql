@@ -5,10 +5,7 @@ CREATE PROCEDURE sign_in (
     IN p_password VARCHAR(255)
 )
 COMMENT "(p_login VARCHAR(30), p_password  VARCHAR(255)) - авторизует пользователя и возвращает access_token, refresh_token и nickname"
-/* 
-Процедура авторизации пользователя и возвращения access_token, refresh_token и nickname
-с использованием уровня изоляции "read committed"
-*/
+-- Процедура авторизации пользователя и возвращения access_token, refresh_token и nickname
 SQL SECURITY DEFINER
 BEGIN
     DECLARE v_encryptedPassword VARCHAR(255);
