@@ -15,7 +15,7 @@ BEGIN
             CALL stop_voting_phase(p_roomCode);
              -- Если была фаза подсказок начать фазу голосования
         ELSE
-            UPDATE Moves SET phase = 'voting', createdAt = NOW(), roundNumber = Moves.roundNumber + 1 
+            UPDATE Moves SET phase = 'voting', createdAt = NOW()
             WHERE roomCode = p_roomCode;
         END IF;
     END IF;

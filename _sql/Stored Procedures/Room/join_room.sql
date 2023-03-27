@@ -25,11 +25,11 @@ BEGIN
     START TRANSACTION;
     SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
     
-    SELECT placesCount, COUNT(*) AS existingPlayersCount 
-    INTO v_placesCount, v_existingPlayersCount 
+    SELECT placesCount, COUNT(*) AS existingPlayersCount
+    INTO v_placesCount, v_existingPlayersCount
     FROM Rooms
     LEFT JOIN Players USING(roomCode)
-    WHERE Rooms.roomCode = Players.roomCode 
+    WHERE Rooms.roomCode = p_roomCode
     GROUP BY Rooms.roomCode
     FOR UPDATE;
     

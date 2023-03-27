@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:horror_stories/src/core/models/models.dart';
@@ -8,9 +9,9 @@ import 'package:horror_stories/src/features/main/data/repositories/rooms_reposit
 import 'package:horror_stories/src/features/main/presentation/widgets/toast.dart';
 import 'package:injectable/injectable.dart';
 
+part 'room_bloc.freezed.dart';
 part 'room_event.dart';
 part 'room_state.dart';
-part 'room_bloc.freezed.dart';
 
 @singleton
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
@@ -23,6 +24,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         leaveRoom: (event) => _leaveRoom(event, emit),
         updateRoom: (event) => _updateRoom(event, emit),
       ),
+      transformer: sequential(),
     );
   }
 
