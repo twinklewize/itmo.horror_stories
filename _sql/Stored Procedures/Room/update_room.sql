@@ -15,29 +15,21 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Вас нет в этой комнате';
     END IF;
 
-    -- Начало транзакции
-    START TRANSACTION;
-    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
-
     -- Возвращает других игроков
     SELECT playerId, Users.nickname 
     FROM Players 
     LEFT JOIN Users USING(login) 
-    WHERE Players.login <> v_login AND roomCode = p_roomCode 
-    FOR UPDATE;
+    WHERE Players.login <> v_login AND roomCode = p_roomCode;
     
     -- Возвращает началась ли игра
     SELECT COUNT(*) as isGameStarted 
     FROM Moves 
-    WHERE roomCode = p_roomCode FOR UPDATE;
+    WHERE roomCode = p_roomCode;
 
     -- Возвращает id мастера
     SELECT Players.playerId as masterId 
     FROM Masters 
     LEFT JOIN Players 
     USING(playerId) 
-    WHERE roomCode = p_roomCode FOR UPDATE;
-  
-    -- Конец транзакции
-    COMMIT;
+    WHERE roomCode = p_roomCode;
 END;

@@ -19,6 +19,5 @@ BEGIN
     WHERE NOT EXISTS (SELECT * FROM Moves WHERE Moves.roomCode=Rooms.roomCode)
     AND (SELECT COUNT(*) FROM Players WHERE roomCode = Rooms.roomCode) < Rooms.placesCount
     AND NOT EXISTS(SELECT playerId FROM Players WHERE login = v_login AND roomCode = Rooms.roomCode)
-    GROUP BY Rooms.roomCode 
-    FOR UPDATE;
+    GROUP BY Rooms.roomCode;
 END;

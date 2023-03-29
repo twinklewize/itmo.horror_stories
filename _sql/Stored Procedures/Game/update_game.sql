@@ -23,6 +23,7 @@
         CALL update_game_phase(p_roomCode);
 
         START TRANSACTION;
+        SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
         -- Возвращает закончилась ли игра
         SELECT v_isGameOver as isGameOver;
         -- Возвращает selectedCardId, если игра закончилась и игрок не мастер

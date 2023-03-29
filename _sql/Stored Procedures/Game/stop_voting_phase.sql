@@ -4,7 +4,7 @@ CREATE PROCEDURE stop_voting_phase (
   IN p_roomCode INT UNSIGNED
 )
  COMMENT "(p_roomCode INT UNSIGNED) - останавливает фазу голосования и выбирает какие карты убрать со стола"
- SQL SECURITY INVOKER
+  SQL SECURITY INVOKER
 BEGIN
   DECLARE v_cardsToRemoveCount  TINYINT;
   DECLARE v_cardsWithVotesCount  TINYINT;

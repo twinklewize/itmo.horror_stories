@@ -17,6 +17,5 @@ BEGIN
         (SELECT COUNT(*) FROM Players WHERE Players.roomCode=Rooms.roomCode) as playersCount   
     FROM Rooms JOIN Players USING(roomCode)
     WHERE Players.login =v_login 
-    GROUP BY Rooms.roomCode 
-    FOR UPDATE;
+    GROUP BY Rooms.roomCode;
 END;

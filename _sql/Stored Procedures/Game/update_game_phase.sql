@@ -4,6 +4,7 @@ CREATE PROCEDURE update_game_phase(
     IN p_roomCode INT UNSIGNED
 )
 COMMENT "(p_room INT UNSIGNED) - проверяет закончилось ли время хода и обновляет раунд и фазу"
+SQL SECURITY INVOKER
 BEGIN
     DECLARE v_moveTime TINYINT UNSIGNED DEFAULT (SELECT moveTime FROM Rooms WHERE roomCode = p_roomCode);
     DECLARE v_createdAt TIMESTAMP DEFAULT (SELECT createdAt FROM Moves WHERE roomCode = p_roomCode);

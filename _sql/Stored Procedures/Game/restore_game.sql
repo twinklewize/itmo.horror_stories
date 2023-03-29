@@ -22,7 +22,7 @@ BEGIN
     END IF;
 
     START TRANSACTION;
-    SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
     -- Возвращает закончилась ли игра
     SELECT v_isGameOver as isGameOver;
@@ -34,21 +34,21 @@ BEGIN
     -- Возвращает других игроков
     SELECT playerId, nickname 
     FROM Players LEFT JOIN Users USING(login) 
-    WHERE Players.login <> v_login AND roomCode = p_roomCode FOR UPDATE;
+    WHERE Players.login <> v_login AND roomCode = p_roomCode;
 
     -- Возвращает карты на столе
     SELECT tableCardId, Cards.cardName, imageUrl, description, isOnTable 
     FROM TableCards LEFT JOIN Cards USING(cardName) 
-    WHERE roomCode = p_roomCode FOR UPDATE;
+    WHERE roomCode = p_roomCode;
 
     -- Возвращает голоса
     SELECT Votes.playerId, tableCardId 
     FROM Votes LEFT JOIN Players USING(playerId) 
-    WHERE roomCode = p_roomCode FOR UPDATE;
+    WHERE roomCode = p_roomCode;
 
     SELECT TIMESTAMPDIFF(SECOND, NOW(), DATE_ADD((Moves.createdAt), INTERVAL Rooms.moveTime SECOND)) INTO v_remaining_time 
     FROM Moves LEFT JOIN Rooms USING(roomCode) 
-    WHERE Moves.roomCode = p_roomCode FOR UPDATE;
+    WHERE Moves.roomCode = p_roomCode;
 
     -- Если remaining_time < 0 присвоить remaining_time = 0
     IF remaining_time < 0 THEN
@@ -59,27 +59,27 @@ BEGIN
         -- Возвращает подсказки, которые на столе для обычного игрока
         SELECT HintCards.cardName, Cards.description, Cards.imageUrl, hintStatus 
         FROM HintCards LEFT JOIN Cards USING(cardName) 
-        WHERE HintCards.roomCode = p_roomCode AND hintStatus <> 'hand' FOR UPDATE;
+        WHERE HintCards.roomCode = p_roomCode AND hintStatus <> 'hand';
         -- Возвращает информацию о ходе с cardsToRemoveCount
         SELECT Moves.roundNumber, RoundRules.cardsToRemoveCount, Moves.phase, v_remaining_time as remainingTime 
         FROM Moves LEFT JOIN RoundRules USING(roundNumber) LEFT JOIN Rooms USING(roomCode) 
-        WHERE Moves.roomCode = p_roomCode FOR UPDATE;
+        WHERE Moves.roomCode = p_roomCode;
     ELSE 
         -- Возвращает все подсказки для мастера
         SELECT HintCards.cardName, Cards.description, Cards.imageUrl, hintStatus 
         FROM HintCards LEFT JOIN Cards USING(cardName) 
-        WHERE roomCode = p_roomCode FOR UPDATE;
+        WHERE roomCode = p_roomCode;
         -- Возвращает информацию о ходе без cardsToRemoveCount
         SELECT Moves.roundNumber, Moves.phase, v_remaining_time as remainingTime 
         FROM Moves LEFT JOIN Rooms USING(roomCode) 
-        WHERE Moves.roomCode = p_roomCode FOR UPDATE;
+        WHERE Moves.roomCode = p_roomCode;
     END IF; 
 
     -- Возвращает selectedCardId если игра закончилась или это мастер
     IF v_playerId = v_masterId OR v_isGameOver = 1 THEN
         SELECT SelectedCards.tableCardId as selectedCardId 
         FROM SelectedCards LEFT JOIN TableCards USING(tableCardId) 
-        WHERE roomCode = p_roomCode FOR UPDATE;
+        WHERE roomCode = p_roomCode;
     END IF;
 
     COMMIT;
